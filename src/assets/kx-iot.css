@@ -1,0 +1,586 @@
+body{
+		margin:0px;
+	}
+
+	#homeRootDiv{
+	    width: 100%;
+	    height: 100%;
+	    background-color:#FFFFFF;
+	}
+
+	#headerDiv{
+		position: relative;
+		background-color:#13689D;
+		width: 100%;
+		height: 80px;
+	}
+
+	#logoDiv{
+		position: absolute;
+		left: 0px;
+		background-color:#13689D;
+		width:300px;
+		height: 80px;
+	}
+
+	#logoFont {
+    	margin-top: 0px;
+    	margin-bottom: 0px;
+    	font-size: xx-large;
+    	color: white;
+    	padding-top: 15px;
+    	padding-left: 10px;
+	}
+
+	#naviDiv{
+		position: absolute;
+		left: 300px;
+		top: 30px;
+		background-color:#D8D8D8;
+		width: 700px;
+		height: 50px;
+	}
+
+	#loginUserDiv{
+		position: absolute;
+		left: 1010px;
+		background-color:#13689D;
+		height: 80px;
+	}
+
+	#logoUserFont {
+    	color: white;
+    	font-size: smaller;
+	}
+
+	#avatarDiv{
+		position: absolute;
+		left:90%;
+		top: 10px;
+		background-color:#13689D;
+		height: 60px;
+	}
+
+	#avatarPic{
+		width: 65px;
+		height: 60px;
+	}
+
+	#runningStatusButton{
+		position: absolute;
+		left: 10px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#FFFFFF;
+        background-color:#13689D;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	#deviceManagerButton{
+		position: absolute;
+		left: 150px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#FFFFFF;
+        background-color:#13689D;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	#dataManagerButton{
+		position: absolute;
+		left: 300px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#FFFFFF;
+        background-color:#13689D;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	#systemSetButton{
+		position: absolute;
+		left: 440px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#FFFFFF;
+        background-color:#13689D;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	#permissionSetButton{
+		position: absolute;
+		left: 580px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#FFFFFF;
+        background-color:#13689D;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	 #middleDiv{
+	 	position: relative;
+		width: 100%;
+		height: 40px;
+	 }
+
+	 #naviInfoDiv{
+	 	position: absolute;
+	 	top: 5px;
+		background-color:#D8D8D8;
+		width: 15%;
+		height: 30px;
+	 }
+
+	 #naviInfoFont{
+	 	color: #000000;
+    	font-size: smaller;
+    	margin: auto;
+    	padding-top: 5px;
+    	text-align: center;
+	 }
+
+	 #naviBlankDiv{
+	 	position: absolute;
+	 	left: 15%;
+	 	top: 5px;
+		background-color:#FFFFFF;
+		width: 0.5%;
+		height: 30px;
+	 }
+
+	 #naviTitleDiv{
+	 	position: absolute;
+	 	left: 15.5%;
+	 	top: 5px;
+		background-color:#D8D8D8;
+		height: 30px;
+		width: 84.5%
+	 }
+
+	 #naviTitleFont{
+	 	color: #000000;
+    	font-size: smaller;
+    	margin: auto;
+    	padding-top: 5px;
+    	text-align: left;
+	 }
+
+	 #mainDiv{
+	 	position: absolute;
+	 	top: 120px;
+	 	bottom: 30px;
+	 	width: 100%;
+	 	background-color:#FFFFFF;
+	 }
+
+	 #bottomDiv{
+	 	position: absolute;
+	 	height: 30px;
+	 	width: 100%;
+	 	bottom: 0px;
+	 	background-color:#D8D8D8;
+	 }
+
+	 #bottomFont{
+	 	color: #000000;
+    	font-size: smaller;
+    	margin: auto;
+    	padding-top: 5px;
+    	text-align: center;
+	 }
+	 #leftSideDiv{
+	 	position: absolute;
+	 	top: 0px;
+	 	bottom: 0px;
+	 	left: 0px;
+	 	width: 15%;
+	 	background-color:#8D99B9;
+	 }
+
+	 #mainBlankDiv{
+	 	position: absolute;
+	 	left: 15%;
+	 	top: 0px;
+	 	bottom: 0px;
+		background-color:#FFFFFF;
+		width: 0.5%;
+	 }
+
+	 #mainDataDiv{
+	 	position: absolute;
+	 	top: 0px;
+	 	bottom: 0px;
+	 	left: 15.5%;
+		background-color:#8D99B9;
+		width: 84%;
+		border-radius: 10px;
+	 }
+	 #allDeviceStatusButton{
+		position: absolute;
+		left: 30%;
+		top: 10px;
+		border-radius: 10px;
+	  	border-style: solid;
+	  	border-width: 0px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	  #offlineDeviceStatusButton{
+		position: absolute;
+		left: 30%;
+		top: 50px;
+		border-radius: 10px;
+	  	border-style: solid;
+	  	border-width: 0px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	  #onlineDeviceStatusButton{
+		position: absolute;
+		left: 30%;
+		top: 90px;
+		border-radius: 10px;
+	  	border-style: solid;
+	  	border-width: 0px;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
+	  #searchAllDeviceStatusDiv{
+	  	position: absolute;
+	  	top: 10px;
+	  	left: 10px;
+	  	height: 60px;
+	  	right: 10px;
+	  	background-color:#D8D8D8;
+	  }
+
+	  #allDevicesStatusListDiv{
+	  	position: absolute;
+	  	top: 80px;
+	  	left: 10px;
+	  	right: 10px;
+	  	bottom: 40px;
+	  	overflow: auto;
+	  	background-color:#D8D8D8;
+	  }
+
+	  #pageDiv{
+	  	position: absolute;
+	  	height: 25px;
+	  	left: 10px;
+	  	right: 10px;
+	  	bottom: 10px;
+	  	background-color:#D8D8D8;
+	  	color: #000000;
+    	font-size: smaller;
+	  }
+
+     .itemlabel .el-form-item__label{
+        text-align: right;
+        vertical-align: middle;
+        font-size: 10px;
+        color: #000000;
+        line-height: 40px;
+        padding: 0 12px 0 0;
+        box-sizing: border-box;
+      }
+
+	  #searchAllDeviceStatusForm{
+	    padding: 10px;
+	  }
+
+	  table{
+        border-collapse: collapse;
+        margin: 0 auto;
+        text-align: left;
+        font-size: 10px;
+        padding-left: 0px;
+        width: 100%;
+        table-layout: fixed;
+      }
+      table td {
+        border: 1px solid #cad9ea;
+        padding-left: 0px;
+        color: #666;
+        height: 30px;
+        font-weight:400;
+      }
+      table th {
+        border: 1px solid #cad9ea;
+        padding-left: 0px;
+        color: #666;
+        height: 30px;
+        background-color: #dcdfe6;
+      }
+      table tr:nth-child(odd){
+        background: #fff;
+      }
+      table tr:nth-child(even){
+        background: #F5FAFA;
+      }
+
+      #hidebgDiv{
+        position:absolute;
+        left:0px;
+        top:0px;
+        bottom: 0px;
+        height: 100%;
+        background-color:#000;
+        width:100%;  /*宽度设置为100%，这样才能使隐藏背景层覆盖原页面*/
+        filter:alpha(opacity=60);  /*设置透明度为60%*/
+        opacity:0.6;  /*非IE浏览器下设置透明度为60%*/
+        display:none; /* http://www.jb51.net */
+        z-Index:2;
+      }
+
+      #historyDataDiv{
+        position:absolute;
+        left:10px;
+        top:0px;
+        background-color:#FFFFFF;
+        width:80%;
+        height: 100%;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
+      #historyDataTitleDiv{
+        position:absolute;
+        left: 10px;
+        right: 10px;
+        top: 10px;
+        height: 30px;
+        background-color:#FFFFFF;
+      }
+
+      .fontSpan{
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      #historyDataSearchDiv{
+        position:absolute;
+        left: 10px;
+        right: 10px;
+        top: 50px;
+        height: 30px;
+        background-color:#D8D8D8;
+      }
+
+      #historyDataListDiv{
+        position:absolute;
+        left: 10px;
+        right: 10px;
+        top: 90px;
+        bottom: 70px;
+        background-color:#D8D8D8;
+        overflow: auto;
+      }
+
+      #historyPageDiv{
+        position:absolute;
+        left: 10px;
+        right: 10px;
+        height: 30px;
+        bottom: 50px;
+        background-color:#D8D8D8;
+      }
+
+      #historyDataButtonDiv{
+        position:absolute;
+        left: 10px;
+        right: 10px;
+        height: 30px;
+        bottom: 10px;
+        text-align:center;
+      }
+
+      .popButton{
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 1px;
+        display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#FFFFFF;
+        background-color:#056F14;
+        width:100px;
+        text-align:center;
+      }
+
+      .firstButtonInLeftSide{
+        position: absolute;
+      	left: 30%;
+      	top: 10px;
+      	border-radius: 10px;
+      	border-style: solid;
+      	border-width: 0px;
+      	display:block;
+      	font-weight:bold;
+      	font-size:14px;
+      	font-family:Verdana, Arial, Helvetica, sans-serif;
+      	color:#000000;
+      	background-color:#D8D8D8;
+      	width:100px;
+      	height: 20px;
+      	text-align:center;
+      	padding:4px;
+      	text-decoration:none;
+      }
+
+      .secondButtonInLeftSide{
+        position: absolute;
+        left: 30%;
+        top: 50px;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 0px;
+        display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+      }
+
+      .thirdButtonInLeftSide{
+        position: absolute;
+        left: 30%;
+        top: 90px;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 0px;
+        display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+      }
+
+      #importDeivceFromFileDiv{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        height: 30px;
+        right: 10px;
+        background-color:#D8D8D8;
+      }
+
+      #searchImportedDeviceDiv{
+        position: absolute;
+        top: 50px;
+        height: 30px;
+        left: 10px;
+        right: 10px;
+        background-color:#D8D8D8;
+      }
+
+      #importedDeviceListDiv{
+        position: absolute;
+        top: 90px;
+        left: 10px;
+        right: 10px;
+        bottom: 40px;
+        background-color:#D8D8D8;
+        overflow: auto;
+      }
+
+      #modifyDeviceDiv{
+        position:absolute;
+        left:10px;
+        top:0px;
+        background-color:#FFFFFF;
+        width:80%;
+        height: 100%;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+       }
+
