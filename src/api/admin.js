@@ -86,6 +86,32 @@ export function getCustomer(params) {
     )
 }
 
+export function patchImport(params) {
+    let url = getHost() + '/device/list'
+    return axios.post(
+        url,
+        params,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function patchBind(params) {
+    let url = getHost() + '/device/binding/'+params.customerId+'/'+params.buildingId+'/'+params.sectionId
+    return axios.patch(
+            url,
+            params.list,
+            {
+                headers: {
+                    'token': localStorage.getItem("token")
+                }
+            }
+    )
+}
+
 function getHost() {
   let localhostUrl = 'http://192.168.1.9:9290'
   let aliyunUrl = 'http://47.110.82.181:8992'

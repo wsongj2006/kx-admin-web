@@ -22,44 +22,41 @@
             </div>
 
             <div id="searchImportedDeviceDiv">
-                <el-form :inline="true" :model="searchForm" size="mini" id="searchAllImportedDeviceForm">
-                    <el-form-item label="设备名称" class="itemlabel ">
-                        <el-input v-model="searchForm.deviceName" placeholder="设备名称"></el-input>
-                    </el-form-item>
+                <table class="searchFormTable">
+                    <tr>
+                        <td align="right" width="60px">设备名称</td>
+                        <td align="left" width="200px">
+                            <input type="text" v-model="searchForm.deviceName" placeholder="" class="searchInput">
+                        </td>
+                        <td align="right" width="80px">设备编码</td>
+                        <td align="left" width="200px" >
+                            <input type="text" v-model="searchForm.deviceCode" placeholder="" class="searchInput">
+                        </td>
+                        <td align="right" width="60px">IMEI</td>
+                        <td width="200px">
+                            <input type="text" v-model="searchForm.imei" placeholder="" class="searchInput">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="60px">用户状态</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.sellStatus" placeholder="请选择" class="searchSelect">
+                                <option :value="item.value" v-for="item in sellStatusOptions" v-bind:key="item">{{item.label}}</option>
+                            </select>
+                        </td>
+                        <td align="right" width="80px">每页显示数</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                                <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">{{item.label}}</option>
+                            </select>
+                        </td>
+                        <td align="center" width="300px" colspan="2">
+                            <el-button size="mini" type="primary" @click="find">查询</el-button>
+                        </td>
+                    </tr>
 
-                    <el-form-item label="设备编码" class="itemlabel ">
-                        <el-input v-model="searchForm.deviceCode" placeholder="设备编码"></el-input>
-                    </el-form-item>
+                </table>
 
-                    <el-form-item label="IMEI" class="itemlabel ">
-                        <el-input v-model="searchForm.imei" placeholder="IMEI"></el-input>
-                    </el-form-item>
-
-                    <el-form-item label="用户状态" class="itemlabel ">
-                        <el-select v-model="searchForm.sellStatus" placeholder="用户状态" autocomplete="off">
-                            <el-option key="all" label="所有" value=""></el-option>
-                            <el-option
-                                    v-for="item in sellStatusOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-
-                    <el-form-item label="每页显示条数" class="itemlabel ">
-                        <el-select v-model="searchForm.pageSize" autocomplete="off" size="mini">
-                            <el-option key="10" label="10" value="10"></el-option>
-                            <el-option key="20" label="20" value="20"></el-option>
-                            <el-option key="30" label="30" value="30"></el-option>
-                            <el-option key="40" label="40" value="40"></el-option>
-                        </el-select>
-                    </el-form-item>
-
-                    <el-form-item>
-                        <el-button type="primary" @click="find">查询</el-button>
-                    </el-form-item>
-                </el-form>
 
             </div>
 
@@ -146,12 +143,33 @@ import { activeBg } from '@/util/util'
 import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { updateDevice } from '@/api/admin'
+import { patchImport } from '@/api/admin'
+import XLSX from 'xlsx'
 export default {
     data () {
         return {
             sellStatusOptions: [
+                {value: '', label: '请选择'},
                 {value: 0, label: '未绑定'},
                 {value: 1, label: '已绑定'}
+            ],
+
+            pageSizeOptions: [
+                {value: 10, label: '10'},
+                {value: 15, label: '15'},
+                {value: 20, label: '20'},
+                {value: 25, label: '25'},
+                {value: 30, label: '30'},
+                {value: 35, label: '35'},
+                {value: 40, label: '40'},
+                {value: 45, label: '45'},
+                {value: 50, label: '50'},
+                {value: 55, label: '55'},
+                {value: 60, label: '60'},
+                {value: 65, label: '65'},
+                {value: 70, label: '70'},
+                {value: 75, label: '75'},
+                {value: 80, label: '80'},
             ],
             searchForm: {
                 deviceName: '',
@@ -169,6 +187,7 @@ export default {
             currentPage: 1,
             total: 100,
             allImportedList: [],
+            arrList: [],
 
             dialogVisible: false
         }
@@ -266,9 +285,95 @@ export default {
             )
         },
 
-        readExcel() {},
-        downloadTemplate() {},
-        batchImport() {},
+        readExcel(e){
+            const files = e.target.files;
+            if (files.length <= 0) {
+                return false;
+            }
+            const fileReader = new FileReader();
+            fileReader.onload = ev => {
+                try {
+                    const data = ev.target.result;
+                    const workbook = XLSX.read(data, {
+                        type: "binary"
+                    });
+                    const wsname = workbook.SheetNames[0]; //取第一张表
+                    const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]); //获取到XLSX表格中的数据,并生成json格式的数据类型
+                    console.log(ws)
+                    let arr = [];
+                    ws.forEach((value, index, ws) => {
+                        arr.push({
+                            name: ws[index]["NAME"] + "",
+                            code: ws[index]["CODE"] + "",
+                            imei: ws[index]["IMEI"] + "",
+                            imsi: ws[index]["IMSI"] + ""
+                        });
+                    })
+                    this.arrList=arr//给arrList赋值,确定导入时传入
+
+                    for(let i in arr){
+                        let item = arr[i]
+                        for(let key in item){
+                            if(item[key] == "undefined"){
+                                delete item[key]
+                            }
+                        }
+                    }
+
+                } catch (e) {
+                    return false;
+                }
+            };
+            fileReader.readAsBinaryString(files[0]);
+        },
+
+        batchImport() {
+            if (this.arrList.length == 0) {
+                this.$message(
+                {   type:"error",
+                    message:"未选择文件"
+                })
+                return;
+            }
+            let params = this.arrList
+            patchImport(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+
+                    }
+                }
+            )
+
+        },
+
+        downloadTemplate() {
+            require.ensure([], () => {
+                const {
+                        export_json_to_excel
+                       } = require('../util/Export2Excel');
+                const tHeader = ['NAME','IMEI','IMSI','CODE'];
+                const filterVal = ['name','imei', 'imsi','code'];
+                const list = [];
+                const data = this.formatJson(filterVal, list);
+                export_json_to_excel(tHeader, data, '导入设备的模板');
+            })
+        },
+
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
         handleCurrentChange(val) {
             this.currentPage = val
             this.find()

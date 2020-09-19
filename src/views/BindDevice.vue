@@ -3,101 +3,60 @@
         <leftSide-view></leftSide-view>
         <div id="mainBlankDiv"></div>
         <div id="mainDataDiv">
-            <div id="importDeivceFromFileDiv">
-                <el-form :inline="true" size="mini">
-                    <el-form-item label="用户" class="itemlabel ">
-                        <el-select v-model="importForm.customerId" placeholder="请选择" autocomplete="off" @change="getAllBuilding()">
-                            <el-option v-for="(item,index) in customerList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="楼栋" class="itemlabel ">
-                        <el-select v-model="importForm.buildingId" placeholder="请选择" autocomplete="off" @change="getAllSection()">
-                            <el-option v-for="(item,index) in buildingList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="区域" class="itemlabel ">
-                        <el-select v-model="importForm.sectionId" placeholder="请选择" autocomplete="off" >
-                            <el-option v-for="(item,index) in sectionList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="downloadTemplate">模板下载</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <a href="javascript:;" class="file">
-                            <el-button type="primary" @click="batchImport()">批量绑定<i
-                                    class="el-icon-upload el-icon-right"></i>
-                            </el-button>
-                            <input id="upload" type="file" ref="uploadExcel" @change="readExcel"
-                                   accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
-                        </a>
-                    </el-form-item>
-                </el-form>
+            <div id="searchBindedDeviceDiv">
+                <table class="searchFormTable">
+                    <tr>
+                        <td align="right" width="50px">用户</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.customerId" class="searchSelect"
+                                    @change="getAllBuildingForSearchForm">
+                                <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td align="right" width="80px">楼栋</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.buildingId" class="searchSelect"
+                                    @change="getAllSectionForSearchForm()">
+                                <option :value="item.id" v-for="item in searchFormBuildingList" v-bind:key="item">
+                                    {{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td align="right" width="40px">区域</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.sectionId" class="searchSelect">
+                                <option :value="item.id" v-for="item in searchFormSectionList" v-bind:key="item">
+                                    {{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="60px">设备名称</td>
+                        <td align="left" width="200px">
+                            <input type="text" v-model="searchForm.deviceName" placeholder="" class="searchInput">
+                        </td>
+                        <td align="right" width="80px">每页显示数</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                                <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
+                                    {{item.label}}
+                                </option>
+                            </select>
+                        </td>
+                        <td align="center" width="300px" colspan="2">
+                            <el-button size="mini" type="primary" @click="find">查询</el-button>
+                            <el-button size="mini" type="primary" @click="openBindDevicePop">批量绑定</el-button>
+                            <el-button type="primary" @click="downloadTemplate" size="mini">模板下载</el-button>
+                        </td>
+                    </tr>
+
+                </table>
 
             </div>
 
-            <div id="searchImportedDeviceDiv">
-                <el-form :inline="true" :model="searchForm" size="mini" id="searchAllImportedDeviceForm">
-                    <el-form-item label="用户" class="itemlabel ">
-                        <el-select v-model="searchForm.customerId" placeholder="请选择" autocomplete="off" @change="getAllBuildingForSearchForm()">
-                            <el-option v-for="(item,index) in customerList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="楼栋" class="itemlabel ">
-                        <el-select v-model="searchForm.buildingId" placeholder="请选择" autocomplete="off" @change="getAllSectionForSearchForm()">
-                            <el-option v-for="(item,index) in searchFormBuildingList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="区域" class="itemlabel ">
-                        <el-select v-model="searchForm.sectionId" placeholder="请选择" autocomplete="off" >
-                            <el-option v-for="(item,index) in searchFormSectionList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="设备名称" class="itemlabel ">
-                        <el-input v-model="searchForm.deviceName" placeholder="设备名称"></el-input>
-                    </el-form-item>
-
-                    <el-form-item label="每页显示条数" class="itemlabel ">
-                        <el-select v-model="searchForm.pageSize" autocomplete="off" size="mini">
-                            <el-option key="10" label="10" value="10"></el-option>
-                            <el-option key="20" label="20" value="20"></el-option>
-                            <el-option key="30" label="30" value="30"></el-option>
-                            <el-option key="40" label="40" value="40"></el-option>
-                        </el-select>
-                    </el-form-item>
-
-                    <el-form-item>
-                        <el-button type="primary" @click="find">查询</el-button>
-                        <el-button type="primary">导出</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-
-            <div id="importedDeviceListDiv">
+            <div id="bindedDeviceListDiv">
                 <table width="100%" class="listTable">
                     <tr>
                         <th width="50px" align="center">No.</th>
@@ -156,7 +115,8 @@
                     <tr>
                         <td align="right">用户:</td>
                         <td>
-                            <el-select size="mini" v-model="modifyDeviceForm.customerId" placeholder="请选择" autocomplete="off" @change="getAllBuildingForModifyForm()">
+                            <el-select size="mini" v-model="modifyDeviceForm.customerId" placeholder="请选择"
+                                       autocomplete="off" @change="getAllBuildingForModifyForm()">
                                 <el-option v-for="(item,index) in customerList"
                                            :key="index"
                                            :label="item.name"
@@ -168,7 +128,8 @@
                     <tr>
                         <td align="right">楼栋:</td>
                         <td>
-                            <el-select size="mini" v-model="modifyDeviceForm.buildingId" placeholder="请选择" autocomplete="off" @change="getAllSectionForModifyForm()">
+                            <el-select size="mini" v-model="modifyDeviceForm.buildingId" placeholder="请选择"
+                                       autocomplete="off" @change="getAllSectionForModifyForm()">
                                 <el-option v-for="(item,index) in modifyFormBuildingList"
                                            :key="index"
                                            :label="item.name"
@@ -180,7 +141,8 @@
                     <tr>
                         <td align="right">区域:</td>
                         <td>
-                            <el-select size="mini" v-model="modifyDeviceForm.sectionId" placeholder="请选择" autocomplete="off">
+                            <el-select size="mini" v-model="modifyDeviceForm.sectionId" placeholder="请选择"
+                                       autocomplete="off">
                                 <el-option v-for="(item,index) in modifyFormSectionList"
                                            :key="index"
                                            :label="item.name"
@@ -199,6 +161,55 @@
                 </table>
             </div>
 
+            <div id="bindDevicePopDiv">
+                <table class="inputFormTable">
+                    <tr>
+                        <td colspan="2" align="center">批量绑定</td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="100px">用户</td>
+                        <td align="left" width="200px">
+                            <select v-model="importForm.customerId" class="searchSelect" @change="getAllBuilding">
+                                <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">楼栋</td>
+                        <td align="left" width="200px">
+                            <select v-model="importForm.buildingId" class="searchSelect" @change="getAllSection()">
+                                <option :value="item.id" v-for="item in buildingList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">区域</td>
+                        <td align="left" width="200px">
+                            <select v-model="importForm.sectionId" class="searchSelect">
+                                <option :value="item.id" v-for="item in sectionList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="200px" colspan="2">
+                            <el-button type="primary" @click="closeBindDevicePop" size="mini">取消</el-button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="javascript:;" class="file">
+                                <el-button type="primary" @click="batchImport()" size="mini">批量绑定<i
+                                        class="el-icon-upload el-icon-right"></i>
+                                </el-button>
+                                <input id="upload" type="file" ref="uploadExcel" @change="readExcel"
+                                       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
         </div>
     </div>
 
@@ -214,6 +225,8 @@ import { updateDevice } from '@/api/admin'
 import { getCustomer } from '@/api/admin'
 import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
+import { patchBind } from '@/api/admin'
+import XLSX from 'xlsx'
 
 export default {
     data () {
@@ -223,6 +236,23 @@ export default {
                 buildingId: '',
                 sectionId: ''
             },
+            pageSizeOptions: [
+                {value: 10, label: '10'},
+                {value: 15, label: '15'},
+                {value: 20, label: '20'},
+                {value: 25, label: '25'},
+                {value: 30, label: '30'},
+                {value: 35, label: '35'},
+                {value: 40, label: '40'},
+                {value: 45, label: '45'},
+                {value: 50, label: '50'},
+                {value: 55, label: '55'},
+                {value: 60, label: '60'},
+                {value: 65, label: '65'},
+                {value: 70, label: '70'},
+                {value: 75, label: '75'},
+                {value: 80, label: '80'},
+            ],
             searchForm: {
                 customerId: '',
                 buildingId: '',
@@ -247,7 +277,8 @@ export default {
             modifyFormBuildingList: [],
             sectionList: [],
             searchFormSectionList: [],
-            modifyFormSectionList: []
+            modifyFormSectionList: [],
+            arrList: []
         }
 
     },
@@ -477,9 +508,138 @@ export default {
             }
         },
 
-        readExcel() {},
-        downloadTemplate() {},
-        batchImport() {},
+        openBindDevicePop(item) {
+            hideBg()
+            this.importForm.customerId=''
+            this.importForm.buildingId=''
+            this.importForm.sectionId=''
+            this.arrayList = []
+            displayPop('bindDevicePopDiv')
+        },
+
+        closeBindDevicePop() {
+            hidePop('bindDevicePopDiv')
+            activeBg()
+            this.importForm.customerId=''
+            this.importForm.buildingId=''
+            this.importForm.sectionId=''
+            this.arrayList = []
+        },
+
+        readExcel(e){
+            const files = e.target.files;
+            if (files.length <= 0) {
+                return false;
+            }
+            const fileReader = new FileReader();
+            fileReader.onload = ev => {
+                try {
+                    const data = ev.target.result;
+                    const workbook = XLSX.read(data, {
+                        type: "binary"
+                    });
+                    const wsname = workbook.SheetNames[0]; //取第一张表
+                    const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]); //获取到XLSX表格中的数据,并生成json格式的数据类型
+                    console.log(ws)
+                    let arr = [];
+                    ws.forEach((value, index, ws) => {
+                        arr.push({
+                            name: ws[index]["NAME"] + "",
+                            code: ws[index]["CODE"] + "",
+                        });
+                    })
+                    this.arrList=arr//给arrList赋值,确定导入时传入
+
+                    for(let i in arr){
+                        let item = arr[i]
+                        for(let key in item){
+                            if(item[key] == "undefined"){
+                                delete item[key]
+                            }
+                        }
+                    }
+
+                } catch (e) {
+                    return false;
+                }
+            };
+            fileReader.readAsBinaryString(files[0]);
+        },
+
+        downloadTemplate() {
+            require.ensure([], () => {
+                const {
+                        export_json_to_excel
+                       } = require('../util/Export2Excel');
+                const tHeader = ['NAME','CODE'];
+                const filterVal = ['name','code'];
+                const list = [];
+                const data = this.formatJson(filterVal, list);
+                export_json_to_excel(tHeader, data, '设备绑定的模板');
+            })
+        },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
+
+        batchImport() {
+            if (this.importForm.customerId == '') {
+                this.$message(
+                {   type:"error",
+                    message:"用户不能为空"
+                })
+                return;
+            }
+            if (this.importForm.buildingId == 0) {
+                this.$message(
+                {   type:"error",
+                    message:"楼栋不能为空"
+                })
+                return;
+            }
+            if (this.importForm.sectionId == 0) {
+                this.$message(
+                {   type:"error",
+                    message:"区域不能为空"
+                })
+                return;
+            }
+            if (this.arrList.length == 0) {
+                this.$message(
+                {   type:"error",
+                    message:"未选择文件"
+                })
+                return;
+            }
+            let params = {
+                list: this.arrList,
+                customerId: this.importForm.customerId,
+                buildingId: this.importForm.buildingId,
+                sectionId: this.importForm.sectionId
+            }
+            patchBind(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.closeBindDevicePop()
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+
+                    }
+                }
+            )
+
+        },
+
         handleCurrentChange(val) {
             this.currentPage = val
             this.find()
@@ -490,9 +650,11 @@ export default {
 
 
 
+
 </script>
 <style>
     @import '../assets/kx-iot.css'
+
 
 
 

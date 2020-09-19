@@ -29,6 +29,25 @@
                     <el-form-item label="仪表名称" class="itemlabel ">
                         <el-input v-model="searchForm.deviceName" placeholder="仪表名称"></el-input>
                     </el-form-item>
+                    <el-form-item label="每页显示条数" class="itemlabel ">
+                        <el-select v-model="searchForm.pageSize" autocomplete="off" size="mini">
+                            <el-option key="10" label="10" value="10"></el-option>
+                            <el-option key="20" label="15" value="15"></el-option>
+                            <el-option key="30" label="20" value="20"></el-option>
+                            <el-option key="40" label="25" value="25"></el-option>
+                            <el-option key="40" label="30" value="30"></el-option>
+                            <el-option key="40" label="35" value="35"></el-option>
+                            <el-option key="40" label="40" value="40"></el-option>
+                            <el-option key="40" label="45" value="45"></el-option>
+                            <el-option key="40" label="50" value="50"></el-option>
+                            <el-option key="40" label="55" value="55"></el-option>
+                            <el-option key="40" label="60" value="60"></el-option>
+                            <el-option key="40" label="65" value="65"></el-option>
+                            <el-option key="40" label="70" value="70"></el-option>
+                            <el-option key="40" label="75" value="75"></el-option>
+                            <el-option key="40" label="80" value="80"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="find">查询</el-button>
                     </el-form-item>
@@ -73,7 +92,7 @@
                         small="true"
                         @current-change="handleCurrentChange"
                         :current-page.sync="currentPage"
-                        :page-size="pageSize"
+                        :page-size="this.searchForm.pageSize"
                         layout="total, prev, pager, next"
                         :total="total">
                 </el-pagination>
@@ -153,10 +172,10 @@ export default {
             searchForm: {
                 building: '',
                 section: '',
-                deviceName: ''
+                deviceName: '',
+                pageSize: 30
             },
             currentPage: 1,
-            pageSize: 30,
             total: 0,
             historyCurrentPage: 1,
             historyPageSize: 20,
@@ -257,7 +276,7 @@ export default {
                 sectionId: this.searchForm.section,
                 online: '',
                 pageNum: this.currentPage,
-                counts: this.pageSize
+                counts: this.searchForm.pageSize
             }
             console.log(this.$store.state.subAction)
 

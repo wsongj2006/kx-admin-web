@@ -556,7 +556,7 @@ body{
       #searchImportedDeviceDiv{
         position: absolute;
         top: 50px;
-        height: 30px;
+        height: 65px;
         left: 10px;
         right: 10px;
         background-color:#D8D8D8;
@@ -564,7 +564,7 @@ body{
 
       #importedDeviceListDiv{
         position: absolute;
-        top: 90px;
+        top: 120px;
         left: 10px;
         right: 10px;
         bottom: 40px;
@@ -606,8 +606,8 @@ body{
 
       #searchBindedDeviceDiv{
         position: absolute;
-        top: 50px;
-        height: 60px;
+        top: 10px;
+        height: 65px;
         left: 10px;
         right: 10px;
         background-color:#D8D8D8;
@@ -615,12 +615,60 @@ body{
 
       #bindedDeviceListDiv{
         position: absolute;
-        top: 120px;
+        top: 80px;
         left: 10px;
         right: 10px;
         bottom: 40px;
         background-color:#D8D8D8;
         overflow: auto;
       }
+
+      input::-webkit-input-placeholder {
+        color: #aab2bd;
+        font-size: 10px;
+      }
+
+      .searchFormTable{
+        position:absolute;
+        top: 0px;
+        border-collapse: collapse;
+        margin: 0 auto;
+        text-align: left;
+        font-size: 10px;
+        padding-left: 0px;
+        width: 400px;
+        border: 1;
+        table-layout:fixed;
+        }
+
+      .searchFormTable td {
+        border: 0px solid #cad9ea;
+        color: #666;
+        height: 30px;
+        font-weight:600;
+      }
+      .searchInput{
+        width:200px;
+        height:20px;
+        font-size:12px;
+      }
+      .searchSelect{
+        width:208px;
+        height:25px;
+        font-size:12px;
+      }
+
+      #bindDevicePopDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:500px;
+        height: 250px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
 
 
