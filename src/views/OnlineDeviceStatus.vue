@@ -36,7 +36,7 @@
             </div>
 
             <div id="allDevicesStatusListDiv">
-                <table width="100%" class="table">
+                <table width="100%" class="listTable">
                     <tr>
                         <th width="50px" align="center">No.</th>
                         <th width="100px">设备名称</th>
@@ -101,7 +101,7 @@
                     <el-button type="primary" @click="exportHistoryData()" size="mini">导出</el-button>
                 </div>
                 <div id="historyDataListDiv">
-                    <table width="100%" class="table">
+                    <table width="100%" class="listTable">
                         <tr>
                             <th width="130px" style='word-wrap: break-word'>上报时间</th>
                             <th width="60px" style='word-wrap: break-word'>上报电量</th>
@@ -218,7 +218,7 @@ export default {
                 name: '',
                 customerId: '',
                 pageNum: 1,
-                counts: 100
+                counts: 1000
             }
             getBuilding(params).then(response => {
                 this.allBuildingList = response.data.data
@@ -233,7 +233,7 @@ export default {
                 customerId: '',
                 buildingId: this.searchForm.building,
                 pageNum: 1,
-                counts: 100
+                counts: 1000
             }
             if (this.searchForm.building == '') {
                 this.allSectionList = []

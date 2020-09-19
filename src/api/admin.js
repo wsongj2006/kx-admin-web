@@ -49,7 +49,33 @@ export function getDeviceHistory(params) {
 }
 
 export function getImportedDevice(params) {
-    let url = getHost() + '/device?name='+params.deviceName+'&code='+params.deviceCode+'&imei='+params.imei+'&sellStatus='+params.sellStatus+'&pageNum='+params.pageNum+'&counts='+params.counts
+    let url = getHost() + '/device?name='+params.deviceName+'&code='+params.deviceCode+'&imei='+params.imei+'&sellStatus='+params.sellStatus+
+        '&customerId='+params.customerId+'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&pageNum='+params.pageNum+'&counts='+params.counts
+    return axios.get(
+        url,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function updateDevice(params) {
+  let url = getHost() + '/device/' + params.id
+  return axios.patch(
+             url,
+             params,
+             {
+               headers: {
+                  'token': localStorage.getItem("token")
+               }
+             }
+    )
+}
+
+export function getCustomer(params) {
+    let url = getHost() + '/customer?name='+params.customerName+'&pageNum='+params.pageNum+'&counts='+params.counts
     return axios.get(
         url,
         {

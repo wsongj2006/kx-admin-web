@@ -5,6 +5,7 @@ import AllDeviceStatus from '@/views/AllDeviceStatus'
 import OfflineDeviceStatus from '@/views/OfflineDeviceStatus'
 import OnlineDeviceStatus from '@/views/OnlineDeviceStatus'
 import ImportDevice from '@/views/ImportDevice'
+import BindDevice from '@/views/BindDevice'
 import Home from '@/components/Home'
 
 Vue.use(VueRouter)
@@ -35,6 +36,10 @@ const routes = [
           {
             path: '/importDevice',
             component: ImportDevice
+          },
+          {
+            path: '/bindDevice',
+            component: BindDevice
           }
           ]
   },

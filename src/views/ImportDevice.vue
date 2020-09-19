@@ -64,7 +64,7 @@
             </div>
 
             <div id="importedDeviceListDiv">
-                <table width="100%" class="table">
+                <table width="100%" class="listTable">
                     <tr>
                         <th width="50px" align="center">No.</th>
                         <th width="200px">设备名称</th>
@@ -80,9 +80,9 @@
                         <td align="center">{{item.imei}}</td>
                         <td align="center">{{item.sellStatusStr}}</td>
                         <td>
-                            <a href="#" v-on:click="openModifyDevicePop(item.id)">修改</a>
+                            <a href="#" v-on:click="openModifyDevicePop(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" >删除</a>
+                            <a href="#">删除</a>
                         </td>
                     </tr>
 
@@ -101,7 +101,37 @@
             </div>
 
             <div id="modifyDeviceDiv">
-
+                <input type="hidden" v-model="modifyDeviceForm.id">
+                <table class="inputFormTable">
+                    <tr>
+                        <td colspan="2" align="center">设备信息修改</td>
+                    </tr>
+                    <tr>
+                        <td width="100px" align="right">设备名称:</td>
+                        <td>
+                            <input type="text" v-model="modifyDeviceForm.deviceName">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">设备编码:</td>
+                        <td>
+                            <input type="text" v-model="modifyDeviceForm.deviceCode">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">IMEI:</td>
+                        <td>
+                            <input type="text" v-model="modifyDeviceForm.imei" readonly>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <button v-on:click="saveDeviceModification">确定</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <button v-on:click="closeHistoryData">取消</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
 
         </div>
@@ -115,6 +145,7 @@ import { hideBg } from '@/util/util'
 import { activeBg } from '@/util/util'
 import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
+import { updateDevice } from '@/api/admin'
 export default {
     data () {
         return {
@@ -129,9 +160,17 @@ export default {
                 sellStatus: '',
                 pageSize: 20
             },
+            modifyDeviceForm: {
+                id: '',
+                deviceName: '',
+                deviceCode: '',
+                imei: ''
+            },
             currentPage: 1,
             total: 100,
-            allImportedList: []
+            allImportedList: [],
+
+            dialogVisible: false
         }
 
     },
@@ -153,6 +192,9 @@ export default {
                 deviceCode: this.searchForm.deviceCode,
                 imei: this.searchForm.imei,
                 sellStatus: this.searchForm.sellStatus,
+                customerId: '',
+                buildingId: '',
+                sectionId: '',
                 pageNum: this.currentPage,
                 counts: this.searchForm.pageSize
             }
@@ -163,10 +205,67 @@ export default {
             })
 
         },
-        openModifyDevicePop(iotDeviceId) {
+        openModifyDevicePop(item) {
             hideBg()
             displayPop('modifyDeviceDiv')
+            this.modifyDeviceForm.id=item.id
+            this.modifyDeviceForm.deviceName=item.name
+            this.modifyDeviceForm.deviceCode=item.code
+            this.modifyDeviceForm.imei=item.imei
         },
+
+        closeHistoryData() {
+            hidePop('modifyDeviceDiv')
+            activeBg()
+            this.modifyDeviceForm.deviceName=''
+            this.modifyDeviceForm.deviceCode=''
+            this.modifyDeviceForm.imei=''
+        },
+
+        saveDeviceModification() {
+            let params = {
+                id: this.modifyDeviceForm.id,
+                name: this.modifyDeviceForm.deviceName,
+                code: this.modifyDeviceForm.deviceCode,
+                imei: this.modifyDeviceForm.imei
+            }
+            if (this.modifyDeviceForm.deviceCode == '') {
+                this.$message(
+                {
+                    type:"error",
+                    message:"设备编码不能为空"
+                })
+                return;
+            }
+            if (this.modifyDeviceForm.imei == '') {
+                this.$message(
+                {
+                    type:"error",
+                    message:"imei不能为空"
+                })
+                return;
+            }
+            updateDevice(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.find()
+                        this.closeHistoryData()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+                    }
+                }
+            )
+        },
+
         readExcel() {},
         downloadTemplate() {},
         batchImport() {},
@@ -178,8 +277,12 @@ export default {
 
 }
 
+
+
 </script>
 <style>
     @import '../assets/kx-iot.css'
+
+
 
 </style>

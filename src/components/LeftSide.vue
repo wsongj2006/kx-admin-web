@@ -83,7 +83,7 @@ export default {
                 let subAction = {subAction: 'bindDevice'}
                 this.$store.commit('updateSubAction',subAction)
 
-                this.$router.push("/importDevice");
+                this.$router.push("/bindDevice");
             }
         }
     }
