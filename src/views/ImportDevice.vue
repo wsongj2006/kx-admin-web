@@ -387,7 +387,4 @@ export default {
 </script>
 <style>
     @import '../assets/kx-iot.css'
-
-
-
 </style>

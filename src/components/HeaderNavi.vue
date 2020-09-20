@@ -41,6 +41,10 @@
                 if(action == 'device') {
                     this.$router.push("/importDevice");
                 }
+
+                if(action == 'data') {
+                    this.$router.push("/currentUsage");
+                }
             }
         }
     }

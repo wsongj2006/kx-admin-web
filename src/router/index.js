@@ -6,6 +6,8 @@ import OfflineDeviceStatus from '@/views/OfflineDeviceStatus'
 import OnlineDeviceStatus from '@/views/OnlineDeviceStatus'
 import ImportDevice from '@/views/ImportDevice'
 import BindDevice from '@/views/BindDevice'
+import CurrentUsage from '@/views/CurrentUsage'
+import PeriodUsage from '@/views/PeriodUsage'
 import Home from '@/components/Home'
 
 Vue.use(VueRouter)
@@ -40,6 +42,14 @@ const routes = [
           {
             path: '/bindDevice',
             component: BindDevice
+          },
+          {
+            path: '/currentUsage',
+            component: CurrentUsage
+          },
+          {
+            path: '/periodUsage',
+            component: PeriodUsage
           }
           ]
   },

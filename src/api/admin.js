@@ -112,6 +112,42 @@ export function patchBind(params) {
     )
 }
 
+export function getCurrentUsage(params) {
+  let url = getHost() + '/device/with_regular?name='+params.deviceName+'&customerId='+params.customerId+'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&pageNum='+params.pageNum+'&counts='+params.counts
+  return axios.get(
+      url,
+      {
+        headers: {
+          'token': localStorage.getItem("token")
+        }
+      }
+  )
+}
+
+export function getPeriodUsage(params) {
+    let url = getHost() + '/device/with_usage?customerId='+params.customerId+'&startTime='+params.startTime+'&endTime=' + params.endTime +'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&name='+params.deviceName+'&pageNum='+params.pageNum+'&counts='+params.counts
+    return axios.get(
+         url,
+         {
+           headers: {
+             'token': localStorage.getItem("token")
+           }
+         }
+    )
+}
+
+export function getTotalUsage(params) {
+    let url = getHost() + '/calculation/usage/total?customerId='+params.customerId+'&startTime='+params.startTime+'&endTime=' + params.endTime +'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&name='+params.deviceName+'&pageNum='+params.pageNum+'&counts='+params.counts
+    return axios.get(
+             url,
+             {
+               headers: {
+                 'token': localStorage.getItem("token")
+               }
+             }
+    )
+}
+
 function getHost() {
   let localhostUrl = 'http://192.168.1.9:9290'
   let aliyunUrl = 'http://47.110.82.181:8992'

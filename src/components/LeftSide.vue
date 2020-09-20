@@ -9,6 +9,12 @@
         <a href="#" id="importDeviceButton" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('importDevice')">设备导入</a>
         <br v-if="this.$store.state.parentMenuCode=='device'" >
         <a href="#" id="bindDeviceButton" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('bindDevice')">设备绑定</a>
+
+        <br v-if="this.$store.state.parentMenuCode=='data'" >
+        <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('currentUsage')">当前用电</a>
+
+        <br v-if="this.$store.state.parentMenuCode=='data'" >
+        <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('periodUsage')">时段用电</a>
     </div>
 </template>
 
@@ -84,6 +90,27 @@ export default {
                 this.$store.commit('updateSubAction',subAction)
 
                 this.$router.push("/bindDevice");
+            }
+
+            if (action == 'currentUsage') {
+                let menus = {
+                    parentMenu: '数据统计',
+                    childMenu: '当前用电',
+                    parentMenuCode: 'data'
+                }
+                this.$store.commit('updateMenu',menus)
+                this.$router.push("/currentUsage");
+            }
+
+            if (action == 'periodUsage') {
+                let menus = {
+                    parentMenu: '数据统计',
+                    childMenu: '时段用电',
+                    parentMenuCode: 'data'
+                }
+                this.$store.commit('updateMenu',menus)
+
+                this.$router.push("/periodUsage");
             }
         }
     }

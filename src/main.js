@@ -10,7 +10,6 @@ import leftSide from './components/LeftSide'
 import Blob from './util/Blob.js'
 import Export2Excel from './util/Export2Excel.js'
 
-
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
