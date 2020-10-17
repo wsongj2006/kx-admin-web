@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { checkSession } from '@/api/admin'
 export default {
     name: 'Home',
     data () {
@@ -21,11 +22,20 @@ export default {
     },
 
     created(){
-
+        this.checkSession()
     },
 
     methods: {
-
+        checkSession() {
+            checkSession().then(
+                response => {
+                    if (response.data.statusCode.code != 200) {
+                        console.log(response.statusCode)
+                        this.$router.push("/login");
+                    }
+                }
+            )
+        }
     }
 }
 

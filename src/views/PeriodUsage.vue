@@ -18,6 +18,7 @@
                         <td align="left" width="205px">
                             <select v-model="searchForm.buildingId" class="searchSelect"
                                     @change="getAllSectionForSearchForm()">
+                                <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in searchFormBuildingList" v-bind:key="item">
                                     {{item.name}}
                                 </option>
@@ -26,6 +27,7 @@
                         <td align="right" width="80px">区域</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.sectionId" class="searchSelect">
+                                <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in searchFormSectionList" v-bind:key="item">
                                     {{item.name}}
                                 </option>
@@ -45,37 +47,21 @@
                         <td align="left">
                             <input type="datetime-local" v-model="searchForm.endTime" placeholder="" style="width:203px;height:20px">
                         </td>
-                        <td align="right" width="80px">每页显示数</td>
-                        <td align="left" width="200px">
-                            <div class="block">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
-                                <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
-                                    {{item.label}}
-                                </option>
-                            </select>
-                            </div>
-                        </td>
-                        <td align="center" width="300px" colspan="2">
+
+                        <td align="center" width="300px" colspan="4">
                             <el-button size="mini" type="primary" @click="queryFromButton">查询</el-button>
                         </td>
                     </tr>
 
                 </table>
             </div>
-
-            <div id="totalUsageDiv">
-                <div id="totalUsageFontDiv">
-                    当前{{totalUsageField}}总使用电量： {{totalUsage}}KWh
-                </div>
-            </div>
-
             <div id="deviceUsageListDiv">
                 <table width="100%" class="listTable">
                     <tr>
                         <th width="100px">用户</th>
-                        <th width="100px">设备名称</th>
                         <th width="80px" align="center">楼栋</th>
                         <th width="80px" align="center">区域</th>
+                        <th width="100px">设备名称</th>
                         <th width="70px" align="center">开始时间</th>
                         <th width="70px" align="center">结束时间</th>
                         <th width="40px" align="center">开始电量</th>
@@ -83,10 +69,10 @@
                         <th width="40px" align="center">使用电量</th>
                     </tr>
                     <tr v-for="item in allUsageList" v-bind:key="item">
-                        <td align="center">{{getCustomerName(item.customerId)}}</td>
+                        <td align="left">{{getCustomerName(item.customerId)}}</td>
+                        <td align="center">{{getBuildingName(item.buildingId)}}</td>
+                        <td align="center">{{getSectionName(item.sectionId)}}</td>
                         <td>{{item.name}}</td>
-                        <td align="center">{{item.buildingName}}</td>
-                        <td align="center">{{item.sectionName}}</td>
                         <td align="center">{{searchStartTime}}</td>
                         <td align="center">{{searchEndTime}}</td>
                         <td align="center">{{item.startUsage}}</td>
@@ -95,17 +81,6 @@
                     </tr>
 
                 </table>
-            </div>
-
-            <div id="pageDiv">
-                <el-pagination
-                        small="true"
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage"
-                        :page-size="searchForm.pageSize"
-                        layout="total, prev, pager, next"
-                        :total="total">
-                </el-pagination>
             </div>
         </div>
 
@@ -195,9 +170,28 @@ export default {
         },
 
         getCustomerName(customerId) {
+            if (customerId == '-1') {
+                return '合计'
+            }
             for (let i = 0; i < this.customerList.length; i++) {
                 if(this.customerList[i].id == customerId) {
                     return this.customerList[i].name
+                }
+            }
+        },
+
+        getBuildingName(buildingId) {
+            for (let i = 0; i < this.searchFormBuildingList.length; i++) {
+                if(this.searchFormBuildingList[i].id == buildingId) {
+                    return this.searchFormBuildingList[i].name
+                }
+            }
+        },
+
+        getSectionName(sectionId) {
+            for (let i = 0; i < this.searchFormSectionList.length; i++) {
+                if(this.searchFormSectionList[i].id == sectionId) {
+                    return this.searchFormSectionList[i].name
                 }
             }
         },
@@ -246,8 +240,7 @@ export default {
         },
 
         findTotalUsage(){
-            this.searchStartTime = ''
-            this.searchEndTime = ''
+
             if (this.searchForm.startTime == '') {
                 this.$message(
                 {

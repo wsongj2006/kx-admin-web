@@ -8,13 +8,23 @@ import ImportDevice from '@/views/ImportDevice'
 import BindDevice from '@/views/BindDevice'
 import CurrentUsage from '@/views/CurrentUsage'
 import PeriodUsage from '@/views/PeriodUsage'
+import Account from '@/views/Account'
+import Customer from '@/views/Customer'
+import Building from '@/views/Building'
+import Section from '@/views/Section'
+import UpdatePwd from '@/views/UpdatePwd'
+import Resource from '@/views/Resource'
+import Role from '@/views/Role'
+import AccountRole from '@/views/AccountRole'
+import RoleResource from '@/views/RoleResource'
+import NoPermission from '@/views/NoPermission'
 import Home from '@/components/Home'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login
   },
@@ -50,13 +60,48 @@ const routes = [
           {
             path: '/periodUsage',
             component: PeriodUsage
+          },
+          {
+            path: '/account',
+            component: Account
+          },
+          {
+            path: '/customer',
+            component: Customer
+          },
+          {
+            path: '/building',
+            component: Building
+          },
+          {
+            path: '/section',
+            component: Section
+          },
+          {
+            path: '/updatePwd',
+            component: UpdatePwd
+          },
+          {
+            path: '/resource',
+            component: Resource
+          },
+          {
+            path: '/role',
+            component: Role
+          },
+          {
+            path: '/accountRole',
+            component: AccountRole
+          },
+          {
+            path: '/roleResource',
+            component: RoleResource
+          },
+          {
+            path: '/noPermission',
+            component: NoPermission
           }
           ]
-  },
-  {
-    path: '/allDeviceStatus',
-    name: 'allDeviceStatus',
-    component: AllDeviceStatus
   }
 ]
 

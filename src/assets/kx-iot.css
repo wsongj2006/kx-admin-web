@@ -544,6 +544,46 @@ body{
         text-decoration:none;
       }
 
+      .forthButtonInLeftSide{
+        position: absolute;
+        left: 30%;
+        top: 130px;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 0px;
+        display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+       }
+
+      .fifthButtonInLeftSide{
+        position: absolute;
+        left: 30%;
+        top: 170px;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 0px;
+        display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#D8D8D8;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+      }
+
       #importDeivceFromFileDiv{
         position: absolute;
         top: 10px;
@@ -613,6 +653,15 @@ body{
         background-color:#D8D8D8;
       }
 
+      .oneLineSearchDiv{
+        position: absolute;
+        top: 10px;
+        height: 35px;
+        left: 10px;
+        right: 10px;
+        background-color:#D8D8D8;
+      }
+
       #bindedDeviceListDiv{
         position: absolute;
         top: 80px;
@@ -622,6 +671,16 @@ body{
         background-color:#D8D8D8;
         overflow: auto;
       }
+
+     .oneLineSearchOutListDiv{
+        position: absolute;
+        top: 55px;
+        left: 10px;
+        right: 10px;
+        bottom: 40px;
+        background-color:#D8D8D8;
+        overflow: auto;
+     }
 
       input::-webkit-input-placeholder {
         color: #aab2bd;
@@ -681,10 +740,10 @@ body{
 
       #deviceUsageListDiv{
         position: absolute;
-        top: 115px;
+        top: 85px;
         left: 10px;
         right: 10px;
-        bottom: 40px;
+        bottom: 10px;
         background-color:#D8D8D8;
         overflow: auto;
       }
@@ -700,6 +759,138 @@ body{
         padding-top: 5px;
         text-align: left;
       }
+
+      #modifyAccountDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 250px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
+      #addAccountDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 250px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
+      #addCustomerDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 300px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
+      #addBuildingDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 200px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
+      #addSectionDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 200px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+      }
+
+    #updatePwdDiv{
+        position:absolute;
+        left:20%;
+        top:20%;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 150px;
+        border-radius: 10px;
+        box-shadow: 10px 10px 5px #888888;
+      }
+
+    #addResourceDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 230px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+    }
+
+    #addRoleDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 200px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+    }
+
+    #addAccountRoleDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 200px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+    }
+
+    #addRoleResourceDiv{
+        position:absolute;
+        left:30%;
+        top:0px;
+        background-color:#FFFFFF;
+        width:400px;
+        height: 200px;
+        display:none;
+        z-Index:3;
+        border-radius: 20px;
+    }
+
+    .el-date-table td span {
+        width: 24px;
+        height: 24px;
+        display: block;
+        margin: 0 auto;
+        line-height: 24px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        color: blue;
+    }
 
 
 

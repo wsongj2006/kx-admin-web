@@ -13,22 +13,25 @@
         </div>
 
         <div id="loginUserDiv">
-            <p id="logoUserFont">上海阚讯科技：User001</p>
+            <p id="logoUserFont">{{this.customerName}}：{{this.userName}}</p>
         </div>
 
         <div id="avatarDiv">
-            <img :src="imgUrl" id="avatarPic">
+            <img :src="imgUrl" id="avatarPic" @click="logout">
         </div>
 
     </div>
 </template>
 
 <script>
+    import { logout } from '@/api/admin'
     export default {
         name: 'Home',
         data () {
             return {
-              imgUrl:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png'
+              imgUrl:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+              customerName: localStorage.getItem("loginCustomerName"),
+              userName: localStorage.getItem("loginUser")
             }
         },
 
@@ -45,6 +48,40 @@
                 if(action == 'data') {
                     this.$router.push("/currentUsage");
                 }
+
+                if(action == 'setup') {
+                    this.$router.push("/account");
+                }
+
+                if(action == 'permission') {
+                    this.$router.push("/resource");
+                }
+            },
+
+            logout(){
+                logout().then(
+                    res => {
+                        if (res.status == 200) {
+                            localStorage.removeItem("token")
+                            localStorage.removeItem("loginUser")
+                            localStorage.removeItem("loginCustomerName")
+                            localStorage.removeItem("userId")
+                            localStorage.removeItem("isSupperAdmin")
+                            this.$router.push("/login");
+                        }else {
+                            this.$message(
+                            {   type:"error",
+                                message: res.data
+                            })
+                        }
+                    }
+                )
+
+
+
+
+
+
             }
         }
     }

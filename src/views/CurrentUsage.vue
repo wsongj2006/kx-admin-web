@@ -18,6 +18,7 @@
                         <td align="left" width="200px">
                             <select v-model="searchForm.buildingId" class="searchSelect"
                                     @change="getAllSectionForSearchForm()">
+                                <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in searchFormBuildingList" v-bind:key="item">
                                     {{item.name}}
                                 </option>
@@ -26,6 +27,7 @@
                         <td align="right" width="40px">区域</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.sectionId" class="searchSelect">
+                                <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in searchFormSectionList" v-bind:key="item">
                                     {{item.name}}
                                 </option>
