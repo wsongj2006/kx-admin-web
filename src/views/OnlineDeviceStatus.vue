@@ -4,35 +4,56 @@
         <div id="mainBlankDiv"></div>
         <div id="mainDataDiv">
             <div id="searchAllDeviceStatusDiv">
-                <el-form :inline="true" :model="searchForm" size="mini" id="searchAllDeviceStatusForm">
-                    <el-form-item label="楼栋" class="itemlabel ">
-                        <el-select v-model="searchForm.building" placeholder="楼栋" autocomplete="off"
-                                   @change="handleOnBuildingChange()">
-                            <el-option key="all" label="所有" value=""></el-option>
-                            <el-option v-for="(item,index) in allBuildingList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="区域" class="itemlabel ">
-                        <el-select v-model="searchForm.section" placeholder="区域" autocomplete="off">
-                            <el-option key="all" label="所有" value=""></el-option>
-                            <el-option v-for="(item,index) in allSectionList"
-                                       :key="index"
-                                       :label="item.name"
-                                       :value="item.id"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="仪表名称" class="itemlabel ">
-                        <el-input v-model="searchForm.deviceName" placeholder="仪表名称"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="find">查询</el-button>
-                    </el-form-item>
-                </el-form>
+                <table class="searchFormTable">
+                    <tr>
+                        <td align="right" width="60px">用户</td>
+                        <td align="left" width="210px">
+                            <select v-model="searchForm.customerId" class="searchSelect"
+                                    @change="handleOnCustomerChange">
+                                <option :value="item.id" v-for="item in allCustomers" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td align="right" width="80px">楼栋</td>
+                        <td align="left" width="205px">
+                            <select v-model="searchForm.building" class="searchSelect"
+                                    @change="handleOnBuildingChange()">
+                                <option value="">请选择</option>
+                                <option :value="item.id" v-for="item in allBuildingList" v-bind:key="item">
+                                    {{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td align="right" width="80px">区域</td>
+                        <td align="left" width="200px">
+                            <select v-model="searchForm.section" class="searchSelect">
+                                <option value="">请选择</option>
+                                <option :value="item.id" v-for="item in allSectionList" v-bind:key="item">
+                                    {{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                        <td align="right" width="60px">设备名称</td>
+                        <td align="left" width="200px">
+                            <input type="text" v-model="searchForm.deviceName" placeholder="" class="searchInput">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="80px">每页显示数</td>
+                        <td align="left" width="300px">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                                <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
+                                    {{item.label}}
+                                </option>
+                            </select>
+                        </td>
+
+                        <td align="left" width="300px" colspan="6">
+                            <el-button size="mini" type="primary" @click="find">查询</el-button>
+                        </td>
+                    </tr>
+
+                </table>
             </div>
 
             <div id="allDevicesStatusListDiv">
@@ -86,16 +107,19 @@
                     </span>
                 </div>
                 <div id="historyDataSearchDiv">
-                    <span class="fontSpan">时间范围</span>
+                    <span class="fontSpan">开始时间</span>
                     <el-date-picker
                             size="mini"
-                            v-model="historyDateValueRange"
-                            type="datetimerange"
-                            :picker-options="pickerOptions"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            align="right">
+                            v-model="historyStartDate"
+                            type="datetime"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                    <span class="fontSpan">结束时间</span>
+                    <el-date-picker
+                            size="mini"
+                            v-model="historyEndDate"
+                            type="datetime"
+                            placeholder="选择日期">
                     </el-date-picker>
                     <el-button type="primary" @click="searchHistoryData()" size="mini">搜索</el-button>
                     <el-button type="primary" @click="exportHistoryData()" size="mini">导出</el-button>
@@ -144,17 +168,38 @@ import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { formatDate } from '@/util/dateTime'
 import { formateDateFromLong } from '@/util/dateTime'
-
+import { getCustomerForUser } from '@/api/admin'
+import { getCustomer } from '@/api/admin'
 
 export default {
     name: 'Home',
     data () {
         return {
             searchForm: {
+                customerId: '',
                 building: '',
                 section: '',
-                deviceName: ''
+                deviceName: '',
+                pageSize: 20
             },
+            pageSizeOptions: [
+                {value: 2, label: '2'},
+                {value: 10, label: '10'},
+                {value: 15, label: '15'},
+                {value: 20, label: '20'},
+                {value: 25, label: '25'},
+                {value: 30, label: '30'},
+                {value: 35, label: '35'},
+                {value: 40, label: '40'},
+                {value: 45, label: '45'},
+                {value: 50, label: '50'},
+                {value: 55, label: '55'},
+                {value: 60, label: '60'},
+                {value: 65, label: '65'},
+                {value: 70, label: '70'},
+                {value: 75, label: '75'},
+                {value: 80, label: '80'},
+            ],
             currentPage: 1,
             pageSize: 30,
             total: 0,
@@ -166,6 +211,7 @@ export default {
             allDeviceStatusList: [],
             historyDataList: [],
             selectedIotDeviceIdForHistory: '',
+            allCustomers: [],
 
             pickerOptions: {
                 shortcuts: [{
@@ -194,7 +240,8 @@ export default {
                   }
                 }]
               },
-              historyDateValueRange: ''
+              historyStartDate: '',
+              historyEndDate: ''
             }
 
     },
@@ -207,16 +254,64 @@ export default {
         }
         this.$store.commit('updateMenu',menus)
 
+        this.getAllCustomer()
         this.getAllBuilding()
-
-        this.find()
     },
 
     methods: {
+        getAllCustomer(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 1) {
+                this.getCustomerList()
+            }else {
+                let params = {
+                    id: localStorage.getItem("customerId")
+                }
+                getCustomerForUser(params).then(
+                    response => {
+                        this.allCustomers = response.data.data
+                        this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                    }
+                )
+            }
+        },
+
+        getCustomerList() {
+            let params = {
+                customerName: '',
+                pageNum: 1,
+                counts: 1000
+            }
+            getCustomer(params).then(
+                response => {
+                    this.allCustomers = response.data.data
+                }
+            )
+        },
+
+        handleOnCustomerChange(){
+            this.allBuildingList = []
+            this.allSectionList = []
+            this.searchForm.section = ''
+            this.searchForm.building = ''
+            this.searchAllBuilding()
+        },
+
         getAllBuilding(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 0) {
+                this.searchForm.customerId = localStorage.getItem("customerId")
+                this.searchAllBuilding()
+            }
+        },
+
+        searchAllBuilding(){
+            if (this.searchForm.customerId == '') {
+                return
+            }
             let params = {
                 name: '',
-                customerId: '',
+                customerId: this.searchForm.customerId,
                 pageNum: 1,
                 counts: 1000
             }
@@ -252,11 +347,12 @@ export default {
         find() {
             let params = {
                 name: this.searchForm.deviceName,
+                customerId: this.searchForm.customerId,
                 buildingId: this.searchForm.building,
                 sectionId: this.searchForm.section,
                 online: 1,
                 pageNum: this.currentPage,
-                counts: this.pageSize
+                counts: this.searchForm.pageSize
             }
             getDeviceStatus(params).then(response => {
                 this.allDeviceStatusList = response.data.data
@@ -276,14 +372,16 @@ export default {
         openHistoryData(iotDeviceId) {
             hideBg()
             displayPop('historyDataDiv')
-            this.historyDateValueRange = ''
+            this.historyStartDate = ''
+            this.historyEndDate = ''
             this.selectedIotDeviceIdForHistory = iotDeviceId;
         },
 
         closeHistoryData() {
             hidePop('historyDataDiv')
             activeBg()
-            this.historyDateValueRange = ''
+            this.historyStartDate = ''
+            this.historyEndDate = ''
             this.selectedIotDeviceIdForHistory = ''
             this.historyDataList = []
             this.historyTotal = 0
@@ -296,17 +394,24 @@ export default {
         },
 
         async searchHistoryData() {
-            if (this.historyDateValueRange == '') {
+            if (this.historyStartDate == '') {
                 this.$message(
                 {   type:"error",
-                    message:"请选择时间范围"
+                    message:"请选择开始时间"
+                })
+                return
+            }
+            if (this.historyEndDate == '') {
+                this.$message(
+                {   type:"error",
+                    message:"请选择结束时间"
                 })
                 return
             }
             let params = {
                 iotDeviceId: this.selectedIotDeviceIdForHistory,
-                startDate: this.formateDateToString(this.historyDateValueRange[0], "yyyy-MM-dd hh:mm:ss"),
-                endDate: this.formateDateToString(this.historyDateValueRange[1], "yyyy-MM-dd hh:mm:ss"),
+                startDate: this.formateDateToString(this.historyStartDate, "yyyy-MM-dd hh:mm:ss"),
+                endDate: this.formateDateToString(this.historyEndDate, "yyyy-MM-dd hh:mm:ss"),
                 pageNum: this.historyCurrentPage,
                 counts: this.historyPageSize
             }

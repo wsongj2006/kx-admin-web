@@ -6,9 +6,9 @@
         <br v-if="this.$store.state.parentMenuCode=='status'" >
         <a href="#" class="thirdButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='status'" v-on:click="goToFromLeftSide('offLineDeviceStatus')">离线设备</a>
         <br v-if="this.$store.state.parentMenuCode=='status'" >
-        <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('importDevice')">设备导入</a>
+        <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('bindDevice')">设备绑定</a>
         <br v-if="this.$store.state.parentMenuCode=='device'" >
-        <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('bindDevice')">设备绑定</a>
+        <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('importDevice')">设备导入</a>
 
         <br v-if="this.$store.state.parentMenuCode=='data'" >
         <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('currentUsage')">当前用电</a>

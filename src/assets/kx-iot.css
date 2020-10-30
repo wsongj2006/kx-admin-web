@@ -43,19 +43,31 @@ body{
 
 	#loginUserDiv{
 		position: absolute;
-		left: 1010px;
+		top: 10px;
+		right: 10px;
+		width: 250px;
 		background-color:#13689D;
-		height: 80px;
+		height: 20px;
 	}
 
-	#logoUserFont {
+	#loginOutDiv{
+	    position: absolute;
+	    right: 10px;
+	    width: 250px;
+	    background-color:#13689D;
+	    height: 10px;
+	    top: 40px;
+	}
+
+	.loginUserAndOutFont {
     	color: white;
     	font-size: smaller;
 	}
 
 	#avatarDiv{
 		position: absolute;
-		left:90%;
+        width: 70px;
+        right: 300px;
 		top: 10px;
 		background-color:#13689D;
 		height: 60px;
@@ -85,6 +97,26 @@ body{
         text-decoration:none;
 	  }
 
+    #runningStatusButtonActive{
+		position: absolute;
+		left: 10px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	border-color: #66b1ff;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#FFFFFF;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	}
+
 	#deviceManagerButton{
 		position: absolute;
 		left: 150px;
@@ -104,6 +136,26 @@ body{
         text-decoration:none;
 	  }
 
+    #deviceManagerButtonActive{
+		position: absolute;
+		left: 150px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	border-color: #66b1ff;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#FFFFFF;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	}
+
 	#dataManagerButton{
 		position: absolute;
 		left: 300px;
@@ -116,6 +168,26 @@ body{
         font-family:Verdana, Arial, Helvetica, sans-serif;
         color:#FFFFFF;
         background-color:#13689D;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	 }
+
+    #dataManagerButtonActive{
+		position: absolute;
+		left: 300px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	border-color: #66b1ff;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#FFFFFF;
         width:100px;
         height: 20px;
         text-align:center;
@@ -142,6 +214,26 @@ body{
         text-decoration:none;
 	  }
 
+    #systemSetButtonActive{
+		position: absolute;
+		left: 440px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	border-color: #66b1ff;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#FFFFFF;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	  }
+
 	#permissionSetButton{
 		position: absolute;
 		left: 580px;
@@ -160,6 +252,26 @@ body{
         padding:4px;
         text-decoration:none;
 	  }
+
+    #permissionSetButtonActive{
+		position: absolute;
+		left: 580px;
+		top: 10px;
+	  	border-style: solid;
+	  	border-width: 1px;
+	  	border-color: #66b1ff;
+	  	display:block;
+        font-weight:bold;
+        font-size:14px;
+        font-family:Verdana, Arial, Helvetica, sans-serif;
+        color:#000000;
+        background-color:#FFFFFF;
+        width:100px;
+        height: 20px;
+        text-align:center;
+        padding:4px;
+        text-decoration:none;
+	}
 
 	 #middleDiv{
 	 	position: relative;
@@ -323,7 +435,7 @@ body{
 	  	position: absolute;
 	  	top: 10px;
 	  	left: 10px;
-	  	height: 60px;
+	  	height: 65px;
 	  	right: 10px;
 	  	background-color:#D8D8D8;
 	  }
@@ -653,6 +765,15 @@ body{
         background-color:#D8D8D8;
       }
 
+      .twoLineSearchDiv{
+        position: absolute;
+        top: 10px;
+        height: 65px;
+        left: 10px;
+        right: 10px;
+        background-color:#D8D8D8;
+      }
+
       .oneLineSearchDiv{
         position: absolute;
         top: 10px;
@@ -663,6 +784,16 @@ body{
       }
 
       #bindedDeviceListDiv{
+        position: absolute;
+        top: 80px;
+        left: 10px;
+        right: 10px;
+        bottom: 40px;
+        background-color:#D8D8D8;
+        overflow: auto;
+      }
+
+      .twoLineSearchOutDiv{
         position: absolute;
         top: 80px;
         left: 10px;
@@ -711,6 +842,7 @@ body{
         height:20px;
         font-size:12px;
       }
+
       .searchSelect{
         width:208px;
         height:25px;

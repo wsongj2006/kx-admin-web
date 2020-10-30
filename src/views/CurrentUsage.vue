@@ -9,7 +9,8 @@
                         <td align="right" width="50px">用户</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.customerId" class="searchSelect"
-                                    @change="getAllBuildingForSearchForm">
+                                    @change="searchAllBuildingForSearchForm">
+                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
@@ -101,6 +102,7 @@
 
 <script>
 import { getCustomer } from '@/api/admin'
+import { getCustomerForUser } from '@/api/admin'
 import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
 import { formatDate } from '@/util/dateTime'
@@ -154,13 +156,32 @@ export default {
         }
         this.$store.commit('updateMenu',menus)
 
-        this.getCustomerList()
+        this.getAllCustomer()
+
+        this.getAllBuilding()
 
         this.find()
 
     },
 
     methods: {
+        getAllCustomer(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 1) {
+                this.getCustomerList()
+            }else {
+                let params = {
+                    id: localStorage.getItem("customerId")
+                }
+                getCustomerForUser(params).then(
+                    response => {
+                        this.customerList = response.data.data
+                        this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                    }
+                )
+            }
+        },
+
         getCustomerList() {
             let params = {
                 customerName: '',
@@ -174,11 +195,22 @@ export default {
             )
         },
 
-        getAllBuildingForSearchForm(){
+        getAllBuilding(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 0) {
+                this.searchForm.customerId = localStorage.getItem("customerId")
+                this.searchAllBuildingForSearchForm()
+            }
+        },
+
+        searchAllBuildingForSearchForm(){
             this.searchFormBuildingList = []
             this.searchForm.buildingId=''
             this.searchFormSectionList = []
             this.searchForm.sectionId = ''
+            if (this.searchForm.customerId == '') {
+                return
+            }
             let params = {
                 name: '',
                 customerId: this.searchForm.customerId,

@@ -9,7 +9,8 @@
                         <td align="right" width="50px">用户</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.customerId" class="searchSelect"
-                                    @change="getAllBuildingForSearchForm">
+                                    @change="searchBuildingForSearchForm">
+                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
@@ -18,6 +19,7 @@
                         <td align="left" width="200px">
                             <select v-model="searchForm.buildingId" class="searchSelect"
                                     @change="getAllSectionForSearchForm()">
+                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in searchFormBuildingList" v-bind:key="item">
                                     {{item.name}}
                                 </option>
@@ -26,6 +28,7 @@
                         <td align="right" width="40px">区域</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.sectionId" class="searchSelect">
+                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in searchFormSectionList" v-bind:key="item">
                                     {{item.name}}
                                 </option>
@@ -74,8 +77,6 @@
                         <td align="center">{{item.sectionName}}</td>
                         <td>
                             <a href="#" v-on:click="openModifyDevicePop(item)">修改</a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#">删除</a>
                         </td>
                     </tr>
 
@@ -223,6 +224,7 @@ import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { updateDevice } from '@/api/admin'
 import { getCustomer } from '@/api/admin'
+import { getCustomerForUser } from '@/api/admin'
 import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
 import { patchBind } from '@/api/admin'
@@ -289,7 +291,8 @@ export default {
             parentMenuCode: 'device'
         }
         this.$store.commit('updateMenu',menus)
-        this.getCustomerList()
+        this.getAllCustomer()
+        this.getAllBuildingForSearchForm();
         this.find()
     },
 
@@ -313,6 +316,7 @@ export default {
             })
 
         },
+
         openModifyDevicePop(item) {
             hideBg()
             displayPop('modifyDeviceDiv')
@@ -390,6 +394,23 @@ export default {
             )
         },
 
+        getAllCustomer(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 1) {
+                this.getCustomerList()
+            }else {
+                let params = {
+                    id: localStorage.getItem("customerId")
+                }
+                getCustomerForUser(params).then(
+                    response => {
+                        this.customerList = response.data.data
+                        this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                    }
+                )
+            }
+        },
+
         getCustomerList() {
             let params = {
                 customerName: '',
@@ -420,6 +441,13 @@ export default {
         },
 
         getAllBuildingForSearchForm(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 0) {
+                this.searchBuildingForSearchForm()
+            }
+        },
+
+        searchBuildingForSearchForm(){
             this.searchFormBuildingList = []
             this.searchForm.buildingId=''
             this.searchFormSectionList = []

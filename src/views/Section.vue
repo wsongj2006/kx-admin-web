@@ -3,20 +3,21 @@
         <leftSide-view></leftSide-view>
         <div id="mainBlankDiv"></div>
         <div id="mainDataDiv">
-            <div class="oneLineSearchDiv">
+            <div class="twoLineSearchDiv">
                 <table class="searchFormTable">
                     <tr>
-                        <td align="right" width="50px">用户</td>
-                        <td align="left" width="200px">
-                            <select v-model="searchForm.customerId" class="searchSelect" @change="getAllBuildingForSearchForm()">
+                        <td align="right" width="60px">用户</td>
+                        <td align="left" width="220px">
+                            <select v-model="searchForm.customerId" class="searchSelect"
+                                    @change="getAllBuildingForSearchForm()">
                                 <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
                         </td>
 
-                        <td align="right" width="80px">楼栋</td>
-                        <td align="left" width="200px">
+                        <td align="right" width="40px">楼栋</td>
+                        <td align="left" width="220px">
                             <select v-model="searchForm.buildingId" class="searchSelect">
                                 <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in searchFormBuildingList" v-bind:key="item">
@@ -29,6 +30,8 @@
                         <td align="left" width="200px">
                             <input type="text" v-model="searchForm.sectionName" placeholder="" class="searchInput">
                         </td>
+                    </tr>
+                    <tr>
                         <td align="right" width="80px">每页显示数</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
@@ -37,7 +40,7 @@
                                 </option>
                             </select>
                         </td>
-                        <td align="center" width="300px">
+                        <td align="left" width="300px" colspan="4">
                             <el-button size="mini" type="primary" @click="find">查询</el-button>
                             <el-button size="mini" type="primary" @click="openAddSectionPop">新增</el-button>
                         </td>
@@ -46,7 +49,7 @@
                 </table>
             </div>
 
-            <div class="oneLineSearchOutListDiv">
+            <div class="twoLineSearchOutDiv">
                 <table width="100%" class="listTable">
                     <tr>
                         <th width="50px" align="center">No.</th>
@@ -61,9 +64,9 @@
                         <td>{{item.buildingName}}</td>
                         <td>{{item.name}}</td>
                         <td align="center">
-                            <a href="#"  v-on:click="openModifySection(item)">修改</a>
+                            <a href="#" v-on:click="openModifySection(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" >删除</a>
+                            <a href="#">删除</a>
                         </td>
                     </tr>
 
@@ -368,4 +371,5 @@ export default {
         }
     }
 }
+
 </script>

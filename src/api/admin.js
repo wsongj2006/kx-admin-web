@@ -26,7 +26,7 @@ export function getSection(params) {
 }
 
 export function getDeviceStatus(params) {
-  let url = getHost() + '/device/with_regular?name='+params.name+'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&online='+params.online+'&pageNum='+params.pageNum+'&counts='+params.counts
+  let url = getHost() + '/device/with_regular?name='+params.name+'&customerId='+params.customerId+'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&online='+params.online+'&pageNum='+params.pageNum+'&counts='+params.counts
   return axios.get(
       url,
       {
@@ -87,6 +87,18 @@ export function getCustomer(params) {
     )
 }
 
+export function getCustomerForUser(params) {
+    let url = getHost() + '/customer/list/'+params.id
+    return axios.get(
+        url,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
 export function patchImport(params) {
     let url = getHost() + '/device/list'
     return axios.post(
@@ -134,18 +146,6 @@ export function getPeriodUsage(params) {
              'token': localStorage.getItem("token")
            }
          }
-    )
-}
-
-export function getTotalUsage(params) {
-    let url = getHost() + '/calculation/usage/total?customerId='+params.customerId+'&startTime='+params.startTime+'&endTime=' + params.endTime +'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&name='+params.deviceName+'&pageNum='+params.pageNum+'&counts='+params.counts
-    return axios.get(
-             url,
-             {
-               headers: {
-                 'token': localStorage.getItem("token")
-               }
-             }
     )
 }
 
@@ -536,7 +536,7 @@ export function checkAccessible(module) {
 }
 
 function getHost() {
-  let localhostUrl = 'http://192.168.1.9:9290'
-  let aliyunUrl = 'http://47.110.82.181:8992'
+  let localhostUrl = 'http://192.168.1.8:9290'
+  let aliyunUrl = 'http://47.110.82.181:9290'
   return localhostUrl
 }

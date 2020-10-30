@@ -144,6 +144,8 @@ import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { updateDevice } from '@/api/admin'
 import { patchImport } from '@/api/admin'
+import { checkAccessible } from '@/api/admin'
+
 import XLSX from 'xlsx'
 export default {
     data () {
@@ -201,7 +203,7 @@ export default {
         }
         this.$store.commit('updateMenu',menus)
 
-        this.find()
+        this.checkAccessible()
     },
 
     methods: {
@@ -223,6 +225,17 @@ export default {
                 this.currentPage = response.data.paging.pageNo
             })
 
+        },
+        checkAccessible(){
+            checkAccessible('building').then(
+                response => {
+                    if (response.data.statusCode.code == 403) {
+                        this.$router.push("/noPermission");
+                    }else {
+                        this.find()
+                    }
+                }
+            )
         },
         openModifyDevicePop(item) {
             hideBg()

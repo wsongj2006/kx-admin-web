@@ -9,7 +9,7 @@
                         <td align="right" width="50px">用户</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.customerId" class="searchSelect"
-                                    @change="getAllBuildingForSearchForm">
+                                    @change="searchAllBuildingForSearchForm">
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
@@ -41,6 +41,46 @@
                     <tr>
                         <td align="right" width="60px">开始时间</td>
                         <td align="left">
+                            <el-date-picker
+                                    size="mini"
+                                    prefix-icon="none"
+                                    v-model="searchForm.startTime"
+                                    type="datetime"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </td>
+                        <td align="right" width="60px">结束时间</td>
+                        <td align="left">
+                            <el-date-picker
+                                    size="mini"
+                                    prefix-icon="none"
+                                    v-model="searchForm.endTime"
+                                    type="datetime"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </td>
+
+                        <td align="center" width="300px" colspan="4">
+                            <el-button size="mini" type="primary" @click="queryFromButton">查询</el-button>
+                        </td>
+                        <!--
+                        <td colspan="4">
+                            <span class="fontSpan">时间范围</span>
+                            <el-date-picker
+                                    size="mini"
+                                    v-model="searchForm.periodRange"
+                                    type="datetimerange"
+                                    :picker-options="pickerOptions"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    align="right">
+                            </el-date-picker>
+                        </td>
+
+                        -->
+                        <!--<td align="right" width="60px">开始时间</td>
+                        <td align="left">
                             <input type="datetime-local" v-model="searchForm.startTime" placeholder="" style="width:203px;height:20px">
                         </td>
                         <td align="right" width="60px">结束时间</td>
@@ -48,11 +88,12 @@
                             <input type="datetime-local" v-model="searchForm.endTime" placeholder="" style="width:203px;height:20px">
                         </td>
 
-                        <td align="center" width="300px" colspan="4">
+                        <td align="left" width="300px" colspan="4">
                             <el-button size="mini" type="primary" @click="queryFromButton">查询</el-button>
                         </td>
-                    </tr>
 
+                    -->
+                    </tr>
                 </table>
             </div>
             <div id="deviceUsageListDiv">
@@ -90,13 +131,13 @@
 
 <script>
 import { getCustomer } from '@/api/admin'
+import { getCustomerForUser } from '@/api/admin'
 import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
 import { formatDate } from '@/util/dateTime'
 import { formateDateFromLong } from '@/util/dateTime'
 import { getCurrentUsage } from '@/api/admin'
 import { getPeriodUsage } from '@/api/admin'
-import { getTotalUsage } from '@/api/admin'
 export default {
 
     data () {
@@ -130,6 +171,7 @@ export default {
                 buildingId: '',
                 sectionId: '',
                 deviceName: '',
+                periodRange: '',
                 startTime: '',
                 endTime: '',
                 pageSize: 20
@@ -137,7 +179,35 @@ export default {
             searchStartTime: '',
             searchEndTime: '',
             totalUsage: 0,
-            totalUsageField: ''
+            totalUsageField: '',
+
+            pickerOptions: {
+                shortcuts: [{
+                  text: '最近一周',
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', [start, end]);
+                  }
+                }, {
+                  text: '最近一个月',
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                    picker.$emit('pick', [start, end]);
+                  }
+                }, {
+                  text: '最近三个月',
+                  onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                    picker.$emit('pick', [start, end]);
+                  }
+                }]
+            }
         }
 
     },
@@ -151,11 +221,29 @@ export default {
         }
         this.$store.commit('updateMenu',menus)
 
-        this.getCustomerList()
+        this.getAllCustomer()
+        this.getAllBuilding()
 
     },
 
     methods: {
+        getAllCustomer(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 1) {
+                this.getCustomerList()
+            }else {
+                let params = {
+                    id: localStorage.getItem("customerId")
+                }
+                getCustomerForUser(params).then(
+                    response => {
+                        this.customerList = response.data.data
+                        this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                    }
+                )
+            }
+        },
+
         getCustomerList() {
             let params = {
                 customerName: '',
@@ -196,11 +284,22 @@ export default {
             }
         },
 
-        getAllBuildingForSearchForm(){
+        getAllBuilding(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 0) {
+                this.searchForm.customerId = localStorage.getItem("customerId")
+                this.searchAllBuildingForSearchForm()
+            }
+        },
+
+        searchAllBuildingForSearchForm(){
             this.searchFormBuildingList = []
             this.searchForm.buildingId=''
             this.searchFormSectionList = []
             this.searchForm.sectionId = ''
+            if (this.searchForm.customerId == '') {
+                return
+            }
             let params = {
                 name: '',
                 customerId: this.searchForm.customerId,
@@ -239,51 +338,9 @@ export default {
             return formateDateFromLong(value)
         },
 
-        findTotalUsage(){
-
-            if (this.searchForm.startTime == '') {
-                this.$message(
-                {
-                    type:"error",
-                    message:'请选择开始时间'
-                })
-                return;
-            }
-
-            if (this.searchForm.endTime == '') {
-                this.$message(
-                {
-                    type:"error",
-                    message:'请选择结束时间'
-                })
-                return;
-            }
-            let params = {
-                customerId: this.searchForm.customerId,
-                buildingId: this.searchForm.buildingId,
-                sectionId: this.searchForm.sectionId,
-                deviceName: this.searchForm.deviceName,
-                startTime: this.searchForm.startTime.replace('T', ' ') + ':00',
-                endTime: this.searchForm.endTime.replace('T', ' ') + ':00',
-                pageNum: this.currentPage,
-                counts: this.searchForm.pageSize
-            }
-            getTotalUsage(params).then(response => {
-                this.totalUsage = response.data.data
-            })
-            if (this.searchForm.sectionId != '') {
-                this.totalUsageField = '区域'
-            }else if (this.searchForm.buildingId != '') {
-                this.totalUsageField = '楼栋'
-            }else{
-                this.totalUsageField = '用户'
-            }
-        },
-
         queryFromButton(){
             this.find()
             this.totalUsage = 0
-            this.findTotalUsage()
         },
 
         find() {
@@ -297,7 +354,6 @@ export default {
                 })
                 return;
             }
-
             if (this.searchForm.endTime == '') {
                 this.$message(
                 {
@@ -306,13 +362,14 @@ export default {
                 })
                 return;
             }
+
             let params = {
                 customerId: this.searchForm.customerId,
                 buildingId: this.searchForm.buildingId,
                 sectionId: this.searchForm.sectionId,
                 deviceName: this.searchForm.deviceName,
-                startTime: this.searchForm.startTime.replace('T', ' ') + ':00',
-                endTime: this.searchForm.endTime.replace('T', ' ') + ':00',
+                startTime: this.formateDateToString(this.searchForm.startTime, "yyyy-MM-dd hh:mm:ss"),
+                endTime: this.formateDateToString(this.searchForm.endTime, "yyyy-MM-dd hh:mm:ss"),
                 pageNum: this.currentPage,
                 counts: this.searchForm.pageSize
             }
@@ -341,7 +398,10 @@ export default {
 
 </script>
 
-<style>
-    @import '../assets/kx-iot.css'
-
+<style scoped lang="scss">
+    .el-input__inner{
+        width:200px;
+        height:20px;
+        font-size:12px;
+      }
 </style>

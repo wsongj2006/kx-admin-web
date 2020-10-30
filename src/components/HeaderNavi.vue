@@ -1,23 +1,37 @@
 <template>
     <div id="headerDiv">
         <div id="logoDiv">
-            <p id="logoFont">阚讯电表控制系统</p>
+            <p id="logoFont">阚讯电表管理系统</p>
         </div>
 
         <div id="naviDiv">
-            <a href="#" id="runningStatusButton" v-on:click="goTo('status')">运行状态</a>
-            <a href="#" id="deviceManagerButton" v-on:click="goTo('device')">设备管理</a>
-            <a href="#" id="dataManagerButton" v-on:click="goTo('data')">数据统计</a>
-            <a href="#" id="systemSetButton" v-on:click="goTo('setup')">系统设置</a>
-            <a href="#" id="permissionSetButton" v-on:click="goTo('permission')">权限管理</a>
-        </div>
+            <a href="#" id="runningStatusButton" v-if="this.$store.state.parentMenuCode!='status'" v-on:click="goTo('status')">运行状态</a>
+            <a href="#" id="runningStatusButtonActive" v-if="this.$store.state.parentMenuCode=='status'" v-on:click="goTo('status')">运行状态</a>
 
-        <div id="loginUserDiv">
-            <p id="logoUserFont">{{this.customerName}}：{{this.userName}}</p>
+            <a href="#" id="deviceManagerButton" v-if="this.$store.state.parentMenuCode!='device'"  v-on:click="goTo('device')">设备管理</a>
+            <a href="#" id="deviceManagerButtonActive" v-if="this.$store.state.parentMenuCode=='device'"  v-on:click="goTo('device')">设备管理</a>
+
+            <a href="#" id="dataManagerButton" v-if="this.$store.state.parentMenuCode!='data'"  v-on:click="goTo('data')">数据统计</a>
+            <a href="#" id="dataManagerButtonActive" v-if="this.$store.state.parentMenuCode=='data'"  v-on:click="goTo('data')">数据统计</a>
+
+            <a href="#" id="systemSetButton" v-if="this.$store.state.parentMenuCode!='setup'" v-on:click="goTo('setup')">系统设置</a>
+            <a href="#" id="systemSetButtonActive" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goTo('setup')">系统设置</a>
+
+            <a href="#" id="permissionSetButton" v-if="this.$store.state.parentMenuCode!='permission'" v-on:click="goTo('permission')">权限管理</a>
+            <a href="#" id="permissionSetButtonActive" v-if="this.$store.state.parentMenuCode=='permission'" v-on:click="goTo('permission')">权限管理</a>
         </div>
 
         <div id="avatarDiv">
-            <img :src="imgUrl" id="avatarPic" @click="logout">
+            <img :src="imgUrl" id="avatarPic" >
+        </div>
+
+        <div id="loginUserDiv">
+            <p class="loginUserAndOutFont">{{this.customerName}}：{{this.userName}}</p>
+        </div>
+        <div id="loginOutDiv">
+            <p class="loginUserAndOutFont">
+                <a href="#" class="loginUserAndOutFont" @click="logout">点击退出</a>
+            </p>
         </div>
 
     </div>
@@ -38,11 +52,15 @@
         methods: {
             goTo(action) {
                 if(action == 'status') {
+                    this.activeRunningStatus="Y"
+                    this.activeDeviceManager="N"
                     this.$router.push("/allDeviceStatus");
                 }
 
                 if(action == 'device') {
-                    this.$router.push("/importDevice");
+                    this.activeRunningStatus="N"
+                    this.activeDeviceManager="Y"
+                    this.$router.push("/bindDevice");
                 }
 
                 if(action == 'data') {
@@ -67,6 +85,7 @@
                             localStorage.removeItem("loginCustomerName")
                             localStorage.removeItem("userId")
                             localStorage.removeItem("isSupperAdmin")
+                            localStorage.removeItem("customerId")
                             this.$router.push("/login");
                         }else {
                             this.$message(
