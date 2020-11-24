@@ -10,13 +10,12 @@
                         <td align="left" width="200px">
                             <select v-model="searchForm.customerId" class="searchSelect"
                                     @change="searchAllBuildingForSearchForm">
-                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
                         </td>
                         <td align="right" width="80px">楼栋</td>
-                        <td align="left" width="200px">
+                        <td align="left" width="205px">
                             <select v-model="searchForm.buildingId" class="searchSelect"
                                     @change="getAllSectionForSearchForm()">
                                 <option value="">请选择</option>
@@ -25,7 +24,7 @@
                                 </option>
                             </select>
                         </td>
-                        <td align="right" width="40px">区域</td>
+                        <td align="right" width="80px">区域</td>
                         <td align="left" width="200px">
                             <select v-model="searchForm.sectionId" class="searchSelect">
                                 <option value="">请选择</option>
@@ -34,65 +33,41 @@
                                 </option>
                             </select>
                         </td>
-                    </tr>
-                    <tr>
                         <td align="right" width="60px">设备名称</td>
                         <td align="left" width="200px">
                             <input type="text" v-model="searchForm.deviceName" placeholder="" class="searchInput">
                         </td>
-                        <td align="right" width="80px">每页显示数</td>
-                        <td align="left" width="200px">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
-                                <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
-                                    {{item.label}}
-                                </option>
-                            </select>
-                        </td>
-                        <td align="center" width="300px" colspan="2">
-                            <el-button size="mini" type="primary" @click="find">查询</el-button>
-                        </td>
                     </tr>
-
-                </table>
-            </div>
-
-            <div id="bindedDeviceListDiv">
-                <table width="100%" class="listTable">
                     <tr>
-                        <th width="50px" align="center">序列号</th>
-                        <th width="100px">设备名称</th>
-                        <th width="100px" align="center">设备编码</th>
-                        <th width="100px" align="center">楼栋</th>
-                        <th width="100px" align="center">区域</th>
-                        <th width="40px" align="center">运行状态</th>
-                        <th width="40px" align="center">当前电量</th>
-                        <th width="40px" align="center">当月用电</th>
-                        <th width="100px" align="center">更新时间</th>
-                    </tr>
-                    <tr v-for="item in allUsageList" v-bind:key="item">
-                        <td align="center">{{item.sid}}</td>
-                        <td>{{item.name}}</td>
-                        <td align="center">{{item.code}}</td>
-                        <td align="center">{{item.buildingName}}</td>
-                        <td align="center">{{item.sectionName}}</td>
-                        <td align="center">{{item.onlineStr}}</td>
-                        <td align="center">{{item.electConsumption}}</td>
-                        <td align="center">{{item.currentMonthUsage}}</td>
-                        <td align="center">{{formatDateFromLong(item.receiveTimeNumber)}}</td>
-                    </tr>
+                        <td align="right" width="60px">开始时间</td>
+                        <td align="left">
+                            <el-date-picker
+                                    size="mini"
+                                    prefix-icon="none"
+                                    v-model="searchForm.startTime"
+                                    type="datetime"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </td>
+                        <td align="right" width="60px">结束时间</td>
+                        <td align="left">
+                            <el-date-picker
+                                    size="mini"
+                                    prefix-icon="none"
+                                    v-model="searchForm.endTime"
+                                    type="datetime"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </td>
 
+                        <td align="center" width="300px" colspan="4">
+                            <el-button size="mini" type="primary" @click="queryFromButton">查询</el-button>
+                        </td>
+                    </tr>
                 </table>
             </div>
+            <div id="usageChartsDiv">
 
-            <div id="pageDiv">
-                <el-pagination
-                        small="true"
-                        @current-change="handleCurrentChange"
-                        :current-page.sync="currentPage"
-                        :page-size="searchForm.pageSize"
-                        layout="total, prev, pager, next"
-                        :total="total">
-                </el-pagination>
             </div>
         </div>
 
@@ -107,7 +82,10 @@ import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
 import { formatDate } from '@/util/dateTime'
 import { formateDateFromLong } from '@/util/dateTime'
-import { getCurrentUsage } from '@/api/admin'
+import { getStartOfThisMonth } from '@/util/dateTime'
+import { getNowOfToday } from '@/util/dateTime'
+import echarts from 'echarts'
+import { getDayUsages } from '@/api/admin'
 export default {
 
     data () {
@@ -118,29 +96,17 @@ export default {
             searchFormBuildingList: [],
             searchFormSectionList: [],
             allUsageList: [],
-            pageSizeOptions: [
-                {value: 2, label: '2'},
-                {value: 10, label: '10'},
-                {value: 15, label: '15'},
-                {value: 20, label: '20'},
-                {value: 25, label: '25'},
-                {value: 30, label: '30'},
-                {value: 35, label: '35'},
-                {value: 40, label: '40'},
-                {value: 45, label: '45'},
-                {value: 50, label: '50'},
-                {value: 55, label: '55'},
-                {value: 60, label: '60'},
-                {value: 65, label: '65'},
-                {value: 70, label: '70'},
-                {value: 75, label: '75'},
-                {value: 80, label: '80'},
-            ],
+            periodUsageDateArray: [],
+            periodUsageValueArray: [],
+
             searchForm: {
                 customerId: '',
                 buildingId: '',
                 sectionId: '',
                 deviceName: '',
+                periodRange: '',
+                startTime: '',
+                endTime: '',
                 pageSize: 20
             }
         }
@@ -151,16 +117,13 @@ export default {
 
         let menus = {
             parentMenu: '数据统计',
-            childMenu: '当前用电',
+            childMenu: '日分图',
             parentMenuCode: 'data'
         }
         this.$store.commit('updateMenu',menus)
 
         this.getAllCustomer()
-
         this.getAllBuilding()
-
-        this.find()
 
     },
 
@@ -177,6 +140,9 @@ export default {
                     response => {
                         this.customerList = response.data.data
                         this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                        this.searchForm.startTime = getStartOfThisMonth()
+                        this.searchForm.endTime = getNowOfToday()
+                        this.find()
                     }
                 )
             }
@@ -193,6 +159,33 @@ export default {
                     this.customerList = response.data.data
                 }
             )
+        },
+
+        getCustomerName(customerId) {
+            if (customerId == '-1') {
+                return '合计'
+            }
+            for (let i = 0; i < this.customerList.length; i++) {
+                if(this.customerList[i].id == customerId) {
+                    return this.customerList[i].name
+                }
+            }
+        },
+
+        getBuildingName(buildingId) {
+            for (let i = 0; i < this.searchFormBuildingList.length; i++) {
+                if(this.searchFormBuildingList[i].id == buildingId) {
+                    return this.searchFormBuildingList[i].name
+                }
+            }
+        },
+
+        getSectionName(sectionId) {
+            for (let i = 0; i < this.searchFormSectionList.length; i++) {
+                if(this.searchFormSectionList[i].id == sectionId) {
+                    return this.searchFormSectionList[i].name
+                }
+            }
         },
 
         getAllBuilding(){
@@ -249,30 +242,106 @@ export default {
             return formateDateFromLong(value)
         },
 
+        queryFromButton(){
+            this.find()
+        },
+
         find() {
+            this.periodUsageDateArray = []
+            this.periodUsageValueArray = []
+            this.allUsageList = []
+            if (this.searchForm.customerId == '') {
+                this.$message(
+                {
+                    type:"error",
+                    message:'请选择用户'
+                })
+                return;
+            }
+
+            if (this.searchForm.startTime == '') {
+                this.$message(
+                {
+                    type:"error",
+                    message:'请选择开始时间'
+                })
+                return;
+            }
+            if (this.searchForm.endTime == '') {
+                this.$message(
+                {
+                    type:"error",
+                    message:'请选择结束时间'
+                })
+                return;
+            }
+
             let params = {
                 customerId: this.searchForm.customerId,
                 buildingId: this.searchForm.buildingId,
                 sectionId: this.searchForm.sectionId,
                 deviceName: this.searchForm.deviceName,
-                pageNum: this.currentPage,
-                counts: this.searchForm.pageSize
+                startTime: this.formateDateToString(this.searchForm.startTime, "yyyy-MM-dd hh:mm:ss"),
+                endTime: this.formateDateToString(this.searchForm.endTime, "yyyy-MM-dd hh:mm:ss")
             }
-            getCurrentUsage(params).then(response => {
-                this.allUsageList = response.data.data
-                for (let i = 0; i < this.allUsageList.length; i++) {
-                    this.allUsageList[i].sid = i+1
+            getDayUsages(params).then(response => {
+                if (response.data.statusCode.code == 200) {
+                    this.allUsageList = response.data.data
+                    this.drawLine();
+                }else {
+                    this.drawLine();
+                    this.$message(
+                    {
+                        type:"error",
+                        message:response.data.statusCode.message
+                    })
                 }
-                this.total = response.data.paging.total
-                this.currentPage = response.data.paging.pageNo
             })
-
         },
 
-        handleCurrentChange(val){
-            this.currentPage = val
-            this.find()
+        drawLine() {
+            for (let i = 0; i < this.allUsageList.length; i++) {
+                this.periodUsageDateArray[i] = this.allUsageList[i].timeStr
+                this.periodUsageValueArray[i] = this.allUsageList[i].usageValue
+            }
+
+            let titleStr = this.formateDateToString(this.searchForm.startTime, "yyyy-MM-dd hh:mm:ss") + "  到  " + this.formateDateToString(this.searchForm.endTime, "yyyy-MM-dd hh:mm:ss")
+
+            this.charts = echarts.init(document.getElementById("usageChartsDiv"))
+            this.charts.setOption({
+                tooltip: {
+                    trigger: 'axis'
+                },
+                title: {text: titleStr},
+                legend: {
+                    data: ['日分图']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    data: this.periodUsageDateArray
+                },
+                yAxis: {},
+
+                series: [{
+                    name: '日分图',
+                    type: 'bar',
+                    stack: '总量',
+                    data: this.periodUsageValueArray
+                }]
+            })
         }
+
     }
 
 
@@ -283,7 +352,10 @@ export default {
 
 </script>
 
-<style>
-    @import '../assets/kx-iot.css'
-
+<style scoped lang="scss">
+    .el-input__inner{
+        width:200px;
+        height:20px;
+        font-size:12px;
+      }
 </style>

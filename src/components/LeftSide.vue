@@ -16,6 +16,15 @@
         <br v-if="this.$store.state.parentMenuCode=='data'" >
         <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('periodUsage')">时段用电</a>
 
+        <br v-if="this.$store.state.parentMenuCode=='data'" >
+        <a href="#" class="thirdButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('hourChart')">时分图</a>
+
+        <br v-if="this.$store.state.parentMenuCode=='data'" >
+        <a href="#" class="forthButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('dayChart')">日分图</a>
+
+        <br v-if="this.$store.state.parentMenuCode=='data'" >
+        <a href="#" class="fifthButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('monthChart')">月分图</a>
+
         <br v-if="this.$store.state.parentMenuCode=='setup'" >
         <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('account')">账户管理</a>
 
@@ -140,6 +149,39 @@ export default {
                 this.$router.push("/periodUsage");
             }
 
+            if (action == 'hourChart') {
+                let menus = {
+                    parentMenu: '数据统计',
+                    childMenu: '时分图',
+                    parentMenuCode: 'data'
+                }
+                this.$store.commit('updateMenu',menus)
+
+                this.$router.push("/hourUsageChart");
+            }
+
+            if (action == 'dayChart') {
+                let menus = {
+                    parentMenu: '数据统计',
+                    childMenu: '日分图',
+                    parentMenuCode: 'data'
+                }
+                this.$store.commit('updateMenu',menus)
+
+                this.$router.push("/dayUsageChart");
+            }
+
+            if (action == 'monthChart') {
+                let menus = {
+                    parentMenu: '数据统计',
+                    childMenu: '月分图',
+                    parentMenuCode: 'data'
+                }
+                this.$store.commit('updateMenu',menus)
+
+                this.$router.push("/monthUsageChart");
+            }
+
             if (action == 'account') {
                 let menus = {
                     parentMenu: '系统设置',
@@ -238,6 +280,7 @@ export default {
 
                 this.$router.push("/roleResource");
             }
+
         }
     }
 }

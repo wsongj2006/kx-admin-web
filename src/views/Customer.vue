@@ -47,7 +47,7 @@
                         <td align="center">
                             <a href="#"  v-on:click="openModifyCustomerPop(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" >删除</a>
+                            <a href="#" v-on:click="deleteCustomer(item)">删除</a>
                         </td>
                     </tr>
 
@@ -131,6 +131,7 @@ import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { getCustomer } from '@/api/admin'
 import { addCustomer } from '@/api/admin'
+import { deleteCustomer } from '@/api/admin'
 import { updateCustomer } from '@/api/admin'
 import { checkAccessible } from '@/api/admin'
 
@@ -315,6 +316,31 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val
             this.find()
+        },
+
+        deleteCustomer(item){
+            let params = {
+                id: item.id
+            }
+            deleteCustomer(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+
+                    }
+                }
+            )
         }
 
     }

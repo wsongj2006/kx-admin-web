@@ -42,7 +42,7 @@
                         <td align="center">
                             <a href="#"  v-on:click="openModifyRole(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" >删除</a>
+                            <a href="#" v-on:click="deleteRole(item)">>删除</a>
                         </td>
                     </tr>
 
@@ -101,6 +101,7 @@ import { activeBg } from '@/util/util'
 import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { getRole } from '@/api/admin'
+import { deleteRole } from '@/api/admin'
 import { saveRole } from '@/api/admin'
 import { updateRole } from '@/api/admin'
 
@@ -258,6 +259,31 @@ export default {
             this.addRoleForm.id = item.id
             this.addRoleForm.roleName = item.roleName
             this.addRoleForm.description = item.description
+        },
+
+        deleteRole(item) {
+            let params = {
+                id: item.id
+            }
+            deleteRole(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                            this.$message(
+                            {
+                                type:"success",
+                                message:response.data.statusCode.message
+                            })
+                            this.find()
+                            this.closeAdd()
+                        }else {
+                            this.$message(
+                            {
+                                type:"error",
+                                message:response.data.statusCode.message
+                            })
+                        }
+                }
+            )
         }
 
     }

@@ -8,6 +8,9 @@ import ImportDevice from '@/views/ImportDevice'
 import BindDevice from '@/views/BindDevice'
 import CurrentUsage from '@/views/CurrentUsage'
 import PeriodUsage from '@/views/PeriodUsage'
+import HourUsageChart from '@/views/HourUsageChart'
+import DayUsageChart from '@/views/DayUsageChart'
+import MonthUsageChart from '@/views/MonthUsageChart'
 import Account from '@/views/Account'
 import Customer from '@/views/Customer'
 import Building from '@/views/Building'
@@ -60,6 +63,18 @@ const routes = [
           {
             path: '/periodUsage',
             component: PeriodUsage
+          },
+          {
+            path: '/hourUsageChart',
+            component: HourUsageChart
+          },
+          {
+            path: '/dayUsageChart',
+            component: DayUsageChart
+          },
+          {
+            path: '/monthUsageChart',
+            component: MonthUsageChart
           },
           {
             path: '/account',

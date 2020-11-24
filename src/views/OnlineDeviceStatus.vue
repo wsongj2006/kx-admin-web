@@ -59,11 +59,12 @@
             <div id="allDevicesStatusListDiv">
                 <table width="100%" class="listTable">
                     <tr>
-                        <th width="50px" align="center">No.</th>
+                        <th width="50px" align="center">序列号</th>
                         <th width="100px">设备名称</th>
                         <th width="100px">楼栋</th>
                         <th width="100px">区域</th>
                         <th width="50px" align="center">运行状态</th>
+                        <th width="50px" align="center">拉闸状态</th>
                         <th width="100px" align="center">当前电压</th>
                         <th width="100px" align="center">当前电流</th>
                         <th width="100px" align="center">当前电量</th>
@@ -71,18 +72,23 @@
                         <th width="100px" align="center">操作</th>
                     </tr>
                     <tr v-for="item in allDeviceStatusList" v-bind:key="item">
-                        <td align="center">{{item.id}}</td>
+                        <td align="center">{{item.sid}}</td>
                         <td>{{item.name}}</td>
                         <td>{{item.buildingName}}</td>
                         <td>{{item.sectionName}}</td>
                         <td v-if="item.online==0" bgcolor="#FF0000" align="center">{{item.onlineStr}}</td>
                         <td v-if="item.online==1" bgcolor="#00FF00" align="center">{{item.onlineStr}}</td>
+                        <td width="50px" align="center">{{getSwitchOutStatus(item.switchOutStatus)}}</td>
                         <td align="center">{{item.voltage}}</td>
                         <td align="center">{{item.electric}}</td>
                         <td align="center">{{item.electConsumption}}</td>
                         <td align="center">{{formatDateFromLong(item.receiveTimeNumber)}}</td>
                         <td align="center">
                             <a href="#" v-on:click="openHistoryData(item.iotDeviceId)">历史上报数据</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" v-on:click="switchout(item.id)">拉闸</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a href="#" v-on:click="switchon(item.id)">合闸</a>
                         </td>
                     </tr>
 
@@ -94,7 +100,7 @@
                         small="true"
                         @current-change="handleCurrentChange"
                         :current-page.sync="currentPage"
-                        :page-size="pageSize"
+                        :page-size="this.searchForm.pageSize"
                         layout="total, prev, pager, next"
                         :total="total">
                 </el-pagination>
@@ -166,10 +172,14 @@ import { hideBg } from '@/util/util'
 import { activeBg } from '@/util/util'
 import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
+import { displayBgMsg } from '@/util/util'
+import { hideBgMsg } from '@/util/util'
 import { formatDate } from '@/util/dateTime'
 import { formateDateFromLong } from '@/util/dateTime'
 import { getCustomerForUser } from '@/api/admin'
 import { getCustomer } from '@/api/admin'
+import { switchOut } from '@/api/admin'
+import { switchOn } from '@/api/admin'
 
 export default {
     name: 'Home',
@@ -249,7 +259,7 @@ export default {
     created(){
         let menus = {
             parentMenu: '运行状态',
-            childMenu: '全部设备',
+            childMenu: '在线设备',
             parentMenuCode: 'status'
         }
         this.$store.commit('updateMenu',menus)
@@ -271,6 +281,7 @@ export default {
                     response => {
                         this.allCustomers = response.data.data
                         this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                        this.find();
                     }
                 )
             }
@@ -285,6 +296,7 @@ export default {
             getCustomer(params).then(
                 response => {
                     this.allCustomers = response.data.data
+                    this.find();
                 }
             )
         },
@@ -356,6 +368,9 @@ export default {
             }
             getDeviceStatus(params).then(response => {
                 this.allDeviceStatusList = response.data.data
+                for (let i = 0; i < this.allDeviceStatusList.length; i++) {
+                    this.allDeviceStatusList[i].sid = i+1
+                }
                 this.total = response.data.paging.total
                 this.currentPage = response.data.paging.pageNo
             })
@@ -422,7 +437,68 @@ export default {
                 this.historyTotal = response.data.paging.total
                 this.historyCurrentPage = response.data.paging.pageNo
             }
-         }
+        },
+
+        async switchout(id){
+            hideBg()
+            displayBgMsg("正在下发指令，请稍后。。。。。。")
+            let params = {
+                id: id
+            }
+            let response = await switchOut(params);
+            if (response.data.statusCode.code == 200){
+                hideBgMsg()
+                activeBg()
+                this.$message(
+                {
+                    type:"success",
+                    message:"指令下发成功"
+                })
+            }else {
+                hideBgMsg()
+                activeBg()
+                this.$message(
+                {
+                    type:"error",
+                    message:"指令下发失败"
+                })
+            }
+
+        },
+
+        async switchon(id){
+            hideBg()
+            displayBgMsg("正在下发指令，请稍后。。。。。。")
+            let params = {
+                id: id
+            }
+            let response = await switchOn(params);
+            if (response.data.statusCode.code == 200){
+                hideBgMsg()
+                activeBg()
+                this.$message(
+                {
+                    type:"success",
+                    message:"指令下发成功"
+                })
+            }else {
+                hideBgMsg()
+                activeBg()
+                this.$message(
+                {
+                    type:"error",
+                    message:"指令下发失败"
+                })
+            }
+        },
+
+        getSwitchOutStatus(switchOutStatusValue) {
+            if (switchOutStatusValue == "1") {
+                return "合闸"
+            }else {
+                return "拉闸"
+            }
+        }
     }
 }
 

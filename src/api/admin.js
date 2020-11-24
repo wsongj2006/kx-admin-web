@@ -75,6 +75,18 @@ export function updateDevice(params) {
     )
 }
 
+export function deleteDevice(params) {
+  let url = getHost() + '/device/' + params.id
+  return axios.delete(
+             url,
+             {
+               headers: {
+                  'token': localStorage.getItem("token")
+               }
+             }
+    )
+}
+
 export function getCustomer(params) {
     let url = getHost() + '/customer?name='+params.customerName+'&pageNum='+params.pageNum+'&counts='+params.counts
     return axios.get(
@@ -113,10 +125,23 @@ export function patchImport(params) {
 }
 
 export function patchBind(params) {
-    let url = getHost() + '/device/binding/'+params.customerId+'/'+params.buildingId+'/'+params.sectionId
+    let url = getHost() + '/device/binding/batch'
     return axios.patch(
             url,
-            params.list,
+            params,
+            {
+                headers: {
+                    'token': localStorage.getItem("token")
+                }
+            }
+    )
+}
+
+export function singleBind(params) {
+    let url = getHost() + '/device/binding/single'
+    return axios.patch(
+            url,
+            params,
             {
                 headers: {
                     'token': localStorage.getItem("token")
@@ -149,6 +174,42 @@ export function getPeriodUsage(params) {
     )
 }
 
+export function getHourUsages(params) {
+    let url = getHost() + '/calculation/usage/hour?customerId='+params.customerId+'&startTime='+params.startTime+'&endTime=' + params.endTime +'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&name='+params.deviceName
+    return axios.get(
+         url,
+         {
+           headers: {
+             'token': localStorage.getItem("token")
+           }
+         }
+    )
+}
+
+export function getDayUsages(params) {
+    let url = getHost() + '/calculation/usage/day?customerId='+params.customerId+'&startTime='+params.startTime+'&endTime=' + params.endTime +'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&name='+params.deviceName
+    return axios.get(
+         url,
+         {
+           headers: {
+             'token': localStorage.getItem("token")
+           }
+         }
+    )
+}
+
+export function getMonthUsages(params) {
+    let url = getHost() + '/calculation/usage/month?customerId='+params.customerId+'&startTime='+params.startTime+'&endTime=' + params.endTime +'&buildingId='+params.buildingId+'&sectionId='+params.sectionId+'&name='+params.deviceName
+    return axios.get(
+         url,
+         {
+           headers: {
+             'token': localStorage.getItem("token")
+           }
+         }
+    )
+}
+
 export function getAccountList(params) {
     let url = getHost() + '/account?customerId='+params.customerId+'&userName='+params.accountName+'&pageNum='+params.pageNum+'&counts='+params.counts
     return axios.get(
@@ -166,6 +227,18 @@ export function updateAccount(params) {
     return axios.patch(
         url,
         params,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function deleteAccount(params) {
+    let url = getHost() + '/account/'+params.id
+    return axios.delete(
+        url,
         {
             headers: {
                 'token': localStorage.getItem("token")
@@ -226,6 +299,18 @@ export function updateCustomer(params) {
     )
 }
 
+export function deleteCustomer(params) {
+    let url = getHost() + '/customer/'+params.id
+    return axios.delete(
+        url,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
 export function addBuilding(params) {
     let url = getHost() + '/building'
     return axios.post(
@@ -252,11 +337,35 @@ export function updateBuilding(params) {
     )
 }
 
+export function deleteBuilding(params) {
+    let url = getHost() + '/building/' + params.id
+    return axios.delete(
+        url,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
 export function addSection(params) {
     let url = getHost() + '/section'
     return axios.post(
         url,
         params,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function deleteSection(params) {
+    let url = getHost() + '/section/' + params.id
+    return axios.delete(
+        url,
         {
             headers: {
                 'token': localStorage.getItem("token")
@@ -372,6 +481,18 @@ export function updateRole(params) {
     return axios.put(
         url,
         params,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function deleteRole(params) {
+    let url = getHost() + '/role/'+params.id
+    return axios.delete(
+        url,
         {
             headers: {
                 'token': localStorage.getItem("token")
@@ -535,8 +656,34 @@ export function checkAccessible(module) {
     )
 }
 
+export function switchOut(params) {
+    let url = getHost() + '/device/'+params.id+'/switchout'
+    return axios.patch(
+              url,
+              params,
+              {
+                  headers: {
+                      'token': localStorage.getItem("token")
+                  }
+              }
+    )
+}
+
+export function switchOn(params) {
+    let url = getHost() + '/device/'+params.id+'/switchon'
+    return axios.patch(
+              url,
+              params,
+              {
+                  headers: {
+                      'token': localStorage.getItem("token")
+                  }
+              }
+    )
+}
+
 function getHost() {
-  let localhostUrl = 'http://192.168.1.8:9290'
+  let localhostUrl = 'http://192.168.1.6:9290'
   let aliyunUrl = 'http://47.110.82.181:9290'
-  return localhostUrl
+  return aliyunUrl
 }

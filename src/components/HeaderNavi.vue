@@ -26,11 +26,11 @@
         </div>
 
         <div id="loginUserDiv">
-            <p class="loginUserAndOutFont">{{this.customerName}}：{{this.userName}}</p>
+            <p class="loginUserAndOutFont">{{this.customerName}}：{{this.roleName}}</p>
         </div>
         <div id="loginOutDiv">
             <p class="loginUserAndOutFont">
-                <a href="#" class="loginUserAndOutFont" @click="logout">点击退出</a>
+                {{this.userName}} &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="loginUserAndOutFont" @click="logout">点击退出</a>
             </p>
         </div>
 
@@ -45,7 +45,8 @@
             return {
               imgUrl:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
               customerName: localStorage.getItem("loginCustomerName"),
-              userName: localStorage.getItem("loginUser")
+              userName: localStorage.getItem("loginUser"),
+              roleName: localStorage.getItem("roleName")
             }
         },
 
@@ -86,6 +87,7 @@
                             localStorage.removeItem("userId")
                             localStorage.removeItem("isSupperAdmin")
                             localStorage.removeItem("customerId")
+                            localStorage.removeItem("roleName")
                             this.$router.push("/login");
                         }else {
                             this.$message(

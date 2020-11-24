@@ -8,6 +8,7 @@ export default new Vuex.Store({
     state:{
         parentMenu: '',
         childMenu: '',
+        childMenuCode: '',
         parentMenuCode: '',
         subAction: ''
     },

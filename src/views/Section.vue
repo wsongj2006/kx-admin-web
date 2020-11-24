@@ -66,7 +66,7 @@
                         <td align="center">
                             <a href="#" v-on:click="openModifySection(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#">删除</a>
+                            <a href="#" v-on:click="deleteSection(item)">删除</a>
                         </td>
                     </tr>
 
@@ -138,6 +138,7 @@ import { getCustomer } from '@/api/admin'
 import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
 import { addSection } from '@/api/admin'
+import { deleteSection } from '@/api/admin'
 import { updateSection } from '@/api/admin'
 import { checkAccessible } from '@/api/admin'
 
@@ -368,6 +369,31 @@ export default {
                     }
                 )
             }
+        },
+
+        deleteSection(item) {
+            let params = {
+                id: item.id
+            }
+            deleteSection(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+
+                    }
+                }
+            )
         }
     }
 }

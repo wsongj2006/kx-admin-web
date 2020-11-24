@@ -26,7 +26,7 @@
                             </select>
                         </td>
                         <td align="right" width="40px">区域</td>
-                        <td align="left" width="200px">
+                        <td align="left" width="400px">
                             <select v-model="searchForm.sectionId" class="searchSelect">
                                 <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in searchFormSectionList" v-bind:key="item">
@@ -48,9 +48,10 @@
                                 </option>
                             </select>
                         </td>
-                        <td align="center" width="300px" colspan="2">
+                        <td align="center" colspan="2">
                             <el-button size="mini" type="primary" @click="find">查询</el-button>
                             <el-button size="mini" type="primary" @click="openBindDevicePop">批量绑定</el-button>
+                            <el-button size="mini" type="primary" @click="openBindSingleDevicePop">单个绑定</el-button>
                             <el-button type="primary" @click="downloadTemplate" size="mini">模板下载</el-button>
                         </td>
                     </tr>
@@ -62,7 +63,8 @@
             <div id="bindedDeviceListDiv">
                 <table width="100%" class="listTable">
                     <tr>
-                        <th width="50px" align="center">No.</th>
+                        <th width="50px" align="center">序列号</th>
+                        <th width="300px">用户</th>
                         <th width="200px">设备名称</th>
                         <th width="200px" align="center">设备编码</th>
                         <th width="200px" align="center">楼栋</th>
@@ -70,7 +72,8 @@
                         <th>操作</th>
                     </tr>
                     <tr v-for="item in allBindedList" v-bind:key="item">
-                        <td align="center">{{item.id}}</td>
+                        <td align="center">{{item.sid}}</td>
+                        <td>{{getCustomerName(item.customerId)}}</td>
                         <td>{{item.name}}</td>
                         <td align="center">{{item.code}}</td>
                         <td align="center">{{item.buildingName}}</td>
@@ -207,6 +210,68 @@
                             </a>
                         </td>
                     </tr>
+                    <tr>
+                        <td colspan="2" align="left">
+                            <p class="errorMsgFont">{{this.bindErrorMsg}}</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <div id="bindSingleDevicePopDiv">
+                <table class="inputFormTable">
+                    <tr>
+                        <td colspan="2" align="center">设备绑定</td>
+                    </tr>
+                    <tr>
+                        <td align="right" width="100px">用户</td>
+                        <td align="left" width="200px">
+                            <select v-model="singleBindForm.customerId" class="searchSelect" @change="getAllBuildingForSingleBind">
+                                <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">楼栋</td>
+                        <td align="left" width="200px">
+                            <select v-model="singleBindForm.buildingId" class="searchSelect" @change="getAllSectionForSingleBind()">
+                                <option :value="item.id" v-for="item in buildingList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right">区域</td>
+                        <td align="left" width="200px">
+                            <select v-model="singleBindForm.sectionId" class="searchSelect">
+                                <option :value="item.id" v-for="item in sectionList" v-bind:key="item">{{item.name}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="right">设备编号</td>
+                        <td align="left" width="200px">
+                            <input type="text" v-model="singleBindForm.code" placeholder="" class="searchInput">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" width="200px" colspan="2">
+                            <el-button type="primary" @click="closeBindSingleDevicePop" size="mini">取消</el-button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <el-button type="primary" @click="singleBind" size="mini">确定</el-button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" align="left">
+                            <p class="errorMsgFont">{{this.bindErrorMsg}}</p>
+                        </td>
+                    </tr>
                 </table>
 
             </div>
@@ -228,6 +293,8 @@ import { getCustomerForUser } from '@/api/admin'
 import { getBuilding } from '@/api/admin'
 import { getSection } from '@/api/admin'
 import { patchBind } from '@/api/admin'
+import { singleBind } from '@/api/admin'
+
 import XLSX from 'xlsx'
 
 export default {
@@ -237,6 +304,12 @@ export default {
                 customerId: '',
                 buildingId: '',
                 sectionId: ''
+            },
+            singleBindForm: {
+                customerId: '',
+                buildingId: '',
+                sectionId: '',
+                code: ''
             },
             pageSizeOptions: [
                 {value: 10, label: '10'},
@@ -280,7 +353,8 @@ export default {
             sectionList: [],
             searchFormSectionList: [],
             modifyFormSectionList: [],
-            arrList: []
+            arrList: [],
+            bindErrorMsg: ''
         }
 
     },
@@ -293,7 +367,7 @@ export default {
         this.$store.commit('updateMenu',menus)
         this.getAllCustomer()
         this.getAllBuildingForSearchForm();
-        this.find()
+
     },
 
     methods: {
@@ -311,6 +385,9 @@ export default {
             }
             getImportedDevice(params).then(response => {
                 this.allBindedList = response.data.data
+                for (let i = 0; i < this.allBindedList.length; i++) {
+                    this.allBindedList[i].sid = i+1
+                }
                 this.total = response.data.paging.total
                 this.currentPage = response.data.paging.pageNo
             })
@@ -406,6 +483,7 @@ export default {
                     response => {
                         this.customerList = response.data.data
                         this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                        this.find()
                     }
                 )
             }
@@ -420,6 +498,7 @@ export default {
             getCustomer(params).then(
                 response => {
                     this.customerList = response.data.data
+                    this.find()
                 }
             )
         },
@@ -432,6 +511,22 @@ export default {
             let params = {
                 name: '',
                 customerId: this.importForm.customerId,
+                pageNum: 1,
+                counts: 1000
+            }
+            getBuilding(params).then(response => {
+                this.buildingList = response.data.data
+            })
+        },
+
+        getAllBuildingForSingleBind(){
+            this.buildingList = []
+            this.singleBindForm.buildingId=''
+            this.sectionList = []
+            this.singleBindForm.sectionId = ''
+            let params = {
+                name: '',
+                customerId: this.singleBindForm.customerId,
                 pageNum: 1,
                 counts: 1000
             }
@@ -498,6 +593,25 @@ export default {
             }
         },
 
+        getAllSectionForSingleBind() {
+            this.sectionList = []
+            this.singleBindForm.sectionId = ''
+            let params = {
+                name: '',
+                customerId: '',
+                buildingId: this.singleBindForm.buildingId,
+                pageNum: 1,
+                counts: 1000
+            }
+            if (this.singleBindForm.building == '') {
+                this.sectionList = []
+            }else {
+                getSection(params).then(response => {
+                    this.sectionList = response.data.data
+                })
+            }
+        },
+
         getAllSectionForSearchForm() {
             this.searchFormSectionList = []
             this.searchForm.sectionId = ''
@@ -537,6 +651,7 @@ export default {
         },
 
         openBindDevicePop(item) {
+            this.bindErrorMsg = ''
             hideBg()
             this.importForm.customerId=''
             this.importForm.buildingId=''
@@ -546,12 +661,33 @@ export default {
         },
 
         closeBindDevicePop() {
+            this.bindErrorMsg = ''
             hidePop('bindDevicePopDiv')
             activeBg()
             this.importForm.customerId=''
             this.importForm.buildingId=''
             this.importForm.sectionId=''
             this.arrayList = []
+        },
+
+        openBindSingleDevicePop(item) {
+            this.bindErrorMsg = ''
+            hideBg()
+            this.singleBindForm.customerId=''
+            this.singleBindForm.buildingId=''
+            this.singleBindForm.sectionId=''
+            this.singleBindForm.code=''
+            displayPop('bindSingleDevicePopDiv')
+        },
+
+        closeBindSingleDevicePop(item) {
+            this.bindErrorMsg = ''
+            hidePop('bindSingleDevicePopDiv')
+            activeBg()
+            this.singleBindForm.customerId=''
+            this.singleBindForm.buildingId=''
+            this.singleBindForm.sectionId=''
+            this.singleBindForm.code=''
         },
 
         readExcel(e){
@@ -618,20 +754,7 @@ export default {
                 })
                 return;
             }
-            if (this.importForm.buildingId == 0) {
-                this.$message(
-                {   type:"error",
-                    message:"楼栋不能为空"
-                })
-                return;
-            }
-            if (this.importForm.sectionId == 0) {
-                this.$message(
-                {   type:"error",
-                    message:"区域不能为空"
-                })
-                return;
-            }
+
             if (this.arrList.length == 0) {
                 this.$message(
                 {   type:"error",
@@ -655,22 +778,80 @@ export default {
                         })
                         this.closeBindDevicePop()
                         this.find()
+                    }else if (response.data.statusCode.code == 2061) {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:"绑定失败！"
+                        })
+                        this.bindErrorMsg = "如下设备不正确，请修正文件：" + response.data.statusCode.message
+
                     }else {
                         this.$message(
                         {
                             type:"error",
                             message:response.data.statusCode.message
                         })
-
                     }
                 }
             )
 
         },
 
+        singleBind() {
+            if (this.singleBindForm.customerId == '') {
+                this.$message(
+                {   type:"error",
+                    message:"用户不能为空"
+                })
+                return;
+            }
+
+            if (this.singleBindForm.code == '') {
+                this.$message(
+                {   type:"error",
+                    message:"设备编号不能为空"
+                })
+                return;
+            }
+            let params = {
+                customerId: this.singleBindForm.customerId,
+                buildingId: this.singleBindForm.buildingId,
+                sectionId: this.singleBindForm.sectionId,
+                code: this.singleBindForm.code
+            }
+            singleBind(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.closeBindSingleDevicePop()
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:"设备号不正确！"
+                        })
+                    }
+                }
+            )
+        },
+
         handleCurrentChange(val) {
             this.currentPage = val
             this.find()
+        },
+
+        getCustomerName(customerId) {
+            for (let i = 0; i < this.customerList.length; i++) {
+                if(this.customerList[i].id == customerId) {
+                    return this.customerList[i].name
+                }
+            }
         }
     }
 

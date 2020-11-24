@@ -55,7 +55,7 @@
                         <td align="center">
                             <a href="#"  v-on:click="openModifyAccountPop(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" >删除</a>
+                            <a href="#" v-on:click="deleteAccount(item)">删除</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             <a href="#" v-on:click="resetPassword(item)">密码重置</a>
 
@@ -149,6 +149,16 @@
                         </td>
                     </tr>
                     <tr>
+                        <td align="right">角色:</td>
+                        <td>
+                            <select v-model="addAccountForm.roleId" class="searchSelect">
+                                <option value="">请选择</option>
+                                <option :value="item.id" v-for="item in roleList" v-bind:key="item">{{item.roleName}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2" align="center">
                             <button v-on:click="addAccount">确定</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -172,8 +182,10 @@ import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { updateAccount } from '@/api/admin'
 import { addAccount } from '@/api/admin'
+import { deleteAccount } from '@/api/admin'
 import { resetPwd } from '@/api/admin'
 import { checkAccount } from '@/api/admin'
+import { getRole } from '@/api/admin'
 
 
 export default {
@@ -189,6 +201,8 @@ export default {
             customerList: [],
 
             accountList: [],
+
+            roleList: [],
 
             currentPage: 1,
             total: 0,
@@ -217,7 +231,8 @@ export default {
                 accountName: '',
                 phone: '',
                 realName: '',
-                email: ''
+                email: '',
+                roleId: ''
             },
 
             modifyAccountForm: {
@@ -348,10 +363,12 @@ export default {
         openAddAccountPop(item) {
             hideBg()
             displayPop('addAccountDiv')
+            this.getAllRoleList()
             this.addAccountForm.email=''
             this.addAccountForm.accountName=''
             this.addAccountForm.phone=''
             this.addAccountForm.realName=''
+            this.addAccountForm.roleId=''
             this.addAccountForm.customerId=this.searchForm.customerId
         },
 
@@ -363,6 +380,7 @@ export default {
             this.addAccountForm.phone=''
             this.addAccountForm.realName=''
             this.addAccountForm.customerId=''
+            this.addAccountForm.roleId=''
         },
 
         addAccount() {
@@ -387,7 +405,8 @@ export default {
                 realName: this.addAccountForm.realName,
                 customerId: this.addAccountForm.customerId,
                 email: this.addAccountForm.email,
-                phone: this.addAccountForm.phone
+                phone: this.addAccountForm.phone,
+                roleId: this.addAccountForm.roleId
             }
             addAccount(params).then(
                 response => {
@@ -430,6 +449,44 @@ export default {
                             type:"error",
                             message:response.data.statusCode.message
                         })
+                    }
+                }
+            )
+        },
+
+        getAllRoleList() {
+            let params = {
+                roleName: '',
+                pageNum: 1,
+                counts: 1000
+            }
+            getRole(params).then(
+                response => {
+                    this.roleList = response.data.data
+                }
+            )
+        },
+
+        deleteAccount(item) {
+            let params = {
+                id: item.id
+            }
+            deleteAccount(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+
                     }
                 }
             )

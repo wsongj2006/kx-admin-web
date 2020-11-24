@@ -57,7 +57,7 @@ export default {
     methods: {
         updatePwd() {
             let params = {
-                id: 1,
+                id: localStorage.getItem("userId"),
                 originPassword: this.updatePwdForm.originPwd,
                 newPassword: this.updatePwdForm.newPwd
             }

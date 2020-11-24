@@ -3,6 +3,19 @@ export function hideBg() {
     hideobj.style.display="block";
 }
 
+export function displayBgMsg(msg) {
+    var msgDivObj=document.getElementById("hidebgMsgDiv");
+    msgDivObj.style.display="block";
+    var msgObj=document.getElementById("hidebgMsgText");
+    msgObj.innerHTML=msg
+}
+
+export function hideBgMsg() {
+    var msgDivObj=document.getElementById("hidebgMsgDiv");
+    msgDivObj.style.display="none";
+    var msgObj=document.getElementById("hidebgMsgText");
+    msgObj.innerHTML=''
+}
 
 export function activeBg() {
     var hideobj=document.getElementById("hidebgDiv");

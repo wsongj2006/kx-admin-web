@@ -23,6 +23,54 @@ function padLeftZero (str) {
   return ('00' + str).substr(str.length);
 }
 
+export function getStartOfToday() {
+    var date = new Date();
+    var datetimeType = "";
+    datetimeType+= date.getFullYear();   //年
+    datetimeType+= "-" + getMonth(date); //月
+    datetimeType += "-" + getDay(date);   //日
+    datetimeType+= " 00";   //时
+    datetimeType+= ":00";      //分
+    datetimeType+= ":00";      //分
+    return datetimeType;
+}
+
+export function getStartOfThisMonth() {
+    var date = new Date();
+    var datetimeType = "";
+    datetimeType+= date.getFullYear();   //年
+    datetimeType+= "-" + getMonth(date); //月
+    datetimeType += "-01";   //日
+    datetimeType+= " 00";   //时
+    datetimeType+= ":00";      //分
+    datetimeType+= ":00";      //分
+    return datetimeType;
+}
+
+export function getStartOfThisYear() {
+    var date = new Date();
+    var datetimeType = "";
+    datetimeType+= date.getFullYear();   //年
+    datetimeType+= "-01"; //月
+    datetimeType += "-01";   //日
+    datetimeType+= " 00";   //时
+    datetimeType+= ":00";      //分
+    datetimeType+= ":00";      //分
+    return datetimeType;
+}
+
+export function getNowOfToday() {
+    var date = new Date();
+    var datetimeType = "";
+    datetimeType+= date.getFullYear();   //年
+    datetimeType+= "-" + getMonth(date); //月
+    datetimeType += "-" + getDay(date);   //日
+    datetimeType+= " " + getHours(date);   //时
+    datetimeType+= ":" + getMinutes(date);     //分
+    datetimeType+= ":" + getSeconds(date);      //分
+    return datetimeType;
+}
+
 
 export function formateDateFromLong(longTypeDate){
     var datetimeType = "";

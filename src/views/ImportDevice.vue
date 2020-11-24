@@ -63,7 +63,7 @@
             <div id="importedDeviceListDiv">
                 <table width="100%" class="listTable">
                     <tr>
-                        <th width="50px" align="center">No.</th>
+                        <th width="50px" align="center">序列号</th>
                         <th width="200px">设备名称</th>
                         <th width="200px" align="center">设备编码</th>
                         <th width="200px" align="center">IMEI</th>
@@ -71,7 +71,7 @@
                         <th>操作</th>
                     </tr>
                     <tr v-for="item in allImportedList" v-bind:key="item">
-                        <td align="center">{{item.id}}</td>
+                        <td align="center">{{item.sid}}</td>
                         <td>{{item.name}}</td>
                         <td align="center">{{item.code}}</td>
                         <td align="center">{{item.imei}}</td>
@@ -79,7 +79,7 @@
                         <td>
                             <a href="#" v-on:click="openModifyDevicePop(item)">修改</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#">删除</a>
+                            <a href="#" v-on:click="deleteDevice(item)">删除</a>
                         </td>
                     </tr>
 
@@ -143,6 +143,7 @@ import { activeBg } from '@/util/util'
 import { displayPop } from '@/util/util'
 import { hidePop } from '@/util/util'
 import { updateDevice } from '@/api/admin'
+import { deleteDevice } from '@/api/admin'
 import { patchImport } from '@/api/admin'
 import { checkAccessible } from '@/api/admin'
 
@@ -221,6 +222,9 @@ export default {
             }
             getImportedDevice(params).then(response => {
                 this.allImportedList = response.data.data
+                for (let i = 0; i < this.allImportedList.length; i++) {
+                    this.allImportedList[i].sid = i+1
+                }
                 this.total = response.data.paging.total
                 this.currentPage = response.data.paging.pageNo
             })
@@ -390,6 +394,31 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val
             this.find()
+        },
+
+        deleteDevice(item) {
+            let params = {
+                id: item.id
+            }
+            deleteDevice(params).then(
+                response => {
+                    if (response.data.statusCode.code == 200) {
+                        this.$message(
+                        {
+                            type:"success",
+                            message:response.data.statusCode.message
+                        })
+                        this.find()
+                    }else {
+                        this.$message(
+                        {
+                            type:"error",
+                            message:response.data.statusCode.message
+                        })
+
+                    }
+                }
+            )
         }
     }
 
