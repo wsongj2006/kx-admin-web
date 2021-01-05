@@ -10,7 +10,6 @@
                         <td align="left" width="200px">
                             <select v-model="searchForm.customerId" class="searchSelect"
                                     @change="searchBuildingForSearchForm">
-                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
@@ -42,7 +41,7 @@
                         </td>
                         <td align="right" width="80px">每页显示数</td>
                         <td align="left" width="200px">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect" @change="handleOnPageSizeChange">
                                 <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
                                     {{item.label}}
                                 </option>
@@ -159,7 +158,7 @@
                         <td colspan="2" align="center">
                             <button v-on:click="saveDeviceModification">确定</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
-                            <button v-on:click="closeHistoryData">取消</button>
+                            <button v-on:click="closeDeviceModification">取消</button>
                         </td>
                     </tr>
                 </table>
@@ -253,7 +252,7 @@
                     </tr>
 
                     <tr>
-                        <td align="right">设备编号</td>
+                        <td align="right">设备编码</td>
                         <td align="left" width="200px">
                             <input type="text" v-model="singleBindForm.code" placeholder="" class="searchInput">
                         </td>
@@ -409,7 +408,7 @@ export default {
             this.modifyDeviceForm.sectionId=item.sectionId
         },
 
-        closeHistoryData() {
+        closeDeviceModification() {
             hidePop('modifyDeviceDiv')
             activeBg()
             this.modifyDeviceForm.deviceName=''
@@ -459,7 +458,7 @@ export default {
                             message:response.data.statusCode.message
                         })
                         this.find()
-                        this.closeHistoryData()
+                        this.closeDeviceModification()
                     }else {
                         this.$message(
                         {
@@ -538,6 +537,7 @@ export default {
         getAllBuildingForSearchForm(){
             let isSupperAdmin = localStorage.getItem("isSupperAdmin")
             if (isSupperAdmin == 0) {
+                this.searchForm.customerId = localStorage.getItem("customerId")
                 this.searchBuildingForSearchForm()
             }
         },
@@ -852,6 +852,11 @@ export default {
                     return this.customerList[i].name
                 }
             }
+        },
+
+        handleOnPageSizeChange(){
+            this.currentPage = 1
+            this.find()
         }
     }
 

@@ -10,7 +10,6 @@
                         <td align="left" width="220px">
                             <select v-model="searchForm.customerId" class="searchSelect"
                                     @change="getAllBuildingForSearchForm()">
-                                <option value="">请选择</option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
@@ -34,7 +33,7 @@
                     <tr>
                         <td align="right" width="80px">每页显示数</td>
                         <td align="left" width="200px">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect" @change="handleOnPageSizeChange">
                                 <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
                                     {{item.label}}
                                 </option>
@@ -141,6 +140,7 @@ import { addSection } from '@/api/admin'
 import { deleteSection } from '@/api/admin'
 import { updateSection } from '@/api/admin'
 import { checkAccessible } from '@/api/admin'
+import { getCustomerForUser } from '@/api/admin'
 
 export default {
 
@@ -211,11 +211,30 @@ export default {
                     if (response.data.statusCode.code == 403) {
                         this.$router.push("/noPermission");
                     }else {
-                        this.getCustomerList()
+                        this.getAllCustomer()
                         this.find()
                     }
                 }
             )
+        },
+
+        getAllCustomer(){
+            let isSupperAdmin = localStorage.getItem("isSupperAdmin")
+            if (isSupperAdmin == 1) {
+                this.getCustomerList()
+            }else {
+                let params = {
+                    id: localStorage.getItem("customerId")
+                }
+                getCustomerForUser(params).then(
+                    response => {
+                        this.customerList = response.data.data
+                        this.searchForm.customerId = parseInt(localStorage.getItem("customerId"))
+                        this.find()
+                        this.getAllBuildingForSearchForm()
+                    }
+                )
+            }
         },
 
         find() {
@@ -394,6 +413,11 @@ export default {
                     }
                 }
             )
+        },
+
+        handleOnPageSizeChange(){
+            this.currentPage = 1
+            this.find()
         }
     }
 }

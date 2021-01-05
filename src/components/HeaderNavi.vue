@@ -69,7 +69,7 @@
                 }
 
                 if(action == 'setup') {
-                    this.$router.push("/account");
+                    this.$router.push("/building");
                 }
 
                 if(action == 'permission') {

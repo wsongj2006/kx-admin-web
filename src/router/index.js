@@ -6,6 +6,7 @@ import OfflineDeviceStatus from '@/views/OfflineDeviceStatus'
 import OnlineDeviceStatus from '@/views/OnlineDeviceStatus'
 import ImportDevice from '@/views/ImportDevice'
 import BindDevice from '@/views/BindDevice'
+import Price from '@/views/Price'
 import CurrentUsage from '@/views/CurrentUsage'
 import PeriodUsage from '@/views/PeriodUsage'
 import HourUsageChart from '@/views/HourUsageChart'
@@ -55,6 +56,10 @@ const routes = [
           {
             path: '/bindDevice',
             component: BindDevice
+          },
+          {
+            path: '/price',
+            component: Price
           },
           {
             path: '/currentUsage',

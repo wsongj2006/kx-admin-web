@@ -21,7 +21,7 @@
                         </td>
                         <td align="right" width="80px">每页显示数</td>
                         <td align="left" width="200px">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect" @change="handleOnPageSizeChange">
                                 <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
                                     {{item.label}}
                                 </option>
@@ -490,6 +490,11 @@ export default {
                     }
                 }
             )
+        },
+
+        handleOnPageSizeChange(){
+            this.currentPage = 1
+            this.find()
         }
     }
 

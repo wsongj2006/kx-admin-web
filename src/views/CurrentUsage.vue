@@ -10,7 +10,6 @@
                         <td align="left" width="200px">
                             <select v-model="searchForm.customerId" class="searchSelect"
                                     @change="searchAllBuildingForSearchForm">
-                                <option value="" label="所有"></option>
                                 <option :value="item.id" v-for="item in customerList" v-bind:key="item">{{item.name}}
                                 </option>
                             </select>
@@ -42,7 +41,7 @@
                         </td>
                         <td align="right" width="80px">每页显示数</td>
                         <td align="left" width="200px">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect" @change="handleOnPageSizeChange">
                                 <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
                                     {{item.label}}
                                 </option>
@@ -271,6 +270,11 @@ export default {
 
         handleCurrentChange(val){
             this.currentPage = val
+            this.find()
+        },
+
+        handleOnPageSizeChange(){
+            this.currentPage = 1
             this.find()
         }
     }

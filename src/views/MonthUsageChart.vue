@@ -62,12 +62,30 @@
 
                         <td align="center" width="300px" colspan="4">
                             <el-button size="mini" type="primary" @click="queryFromButton">查询</el-button>
+                            <el-button size="mini" type="primary" @click="displayTable" v-if="this.displayContent=='chart'">表格显示</el-button>
+                            <el-button size="mini" type="primary" @click="displayChart" v-if="this.displayContent=='table'">图表显示</el-button>
                         </td>
                     </tr>
                 </table>
             </div>
             <div id="usageChartsDiv">
 
+            </div>
+
+            <div id="usageListTable"  class="twoLineSearchOutDiv">
+                <table width="100%" class="listTable">
+                    <tr>
+                        <th width="50px" align="center">No.</th>
+                        <th width="200px">时间</th>
+                        <th align="left">用电量</th>
+                    </tr>
+                    <tr v-for="item in allUsageList" v-bind:key="item">
+                        <td align="center">{{item.sid}}</td>
+                        <td>{{item.timeStr}}</td>
+                        <td>{{item.usageValue}}</td>
+                    </tr>
+
+                </table>
             </div>
         </div>
 
@@ -98,6 +116,7 @@ export default {
             allUsageList: [],
             periodUsageDateArray: [],
             periodUsageValueArray: [],
+            displayContent: 'chart',
 
             searchForm: {
                 customerId: '',
@@ -287,6 +306,9 @@ export default {
             getMonthUsages(params).then(response => {
                 if (response.data.statusCode.code == 200) {
                     this.allUsageList = response.data.data
+                    for (let i = 0; i < this.allUsageList.length; i++) {
+                       this.allUsageList[i].sid = i+1
+                    }
                     this.drawLine();
                 }else {
                     this.drawLine();
@@ -300,6 +322,10 @@ export default {
         },
 
         drawLine() {
+            if (this.displayContent=='table') {
+                return;
+            }
+
             for (let i = 0; i < this.allUsageList.length; i++) {
                 this.periodUsageDateArray[i] = this.allUsageList[i].timeStr
                 this.periodUsageValueArray[i] = this.allUsageList[i].usageValue
@@ -337,9 +363,32 @@ export default {
                     name: '月分图',
                     type: 'bar',
                     stack: '总量',
-                    data: this.periodUsageValueArray
+                    data: this.periodUsageValueArray,
+                    itemStyle:{'color':'#13689D'}
                 }]
             })
+        },
+
+        displayTable(){
+            this.displayContent = 'table'
+            this.queryFromButton()
+
+            var charObj=document.getElementById("usageChartsDiv");
+            charObj.style.display="none";
+
+            var tableObj=document.getElementById("usageListTable");
+            tableObj.style.display="block";
+        },
+
+        displayChart(){
+            this.displayContent = 'chart'
+            this.queryFromButton()
+
+            var charObj=document.getElementById("usageChartsDiv");
+            charObj.style.display="block";
+
+            var tableObj=document.getElementById("usageListTable");
+            tableObj.style.display="none";
         }
 
     }

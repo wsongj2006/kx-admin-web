@@ -9,6 +9,8 @@
         <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('bindDevice')">设备绑定</a>
         <br v-if="this.$store.state.parentMenuCode=='device'" >
         <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('importDevice')">设备导入</a>
+        <br v-if="this.$store.state.parentMenuCode=='device'" >
+        <a href="#" class="thirdButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='device'" v-on:click="goToFromLeftSide('price')">电价设置</a>
 
         <br v-if="this.$store.state.parentMenuCode=='data'" >
         <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('currentUsage')">当前用电</a>
@@ -26,16 +28,16 @@
         <a href="#" class="fifthButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='data'" v-on:click="goToFromLeftSide('monthChart')">月分图</a>
 
         <br v-if="this.$store.state.parentMenuCode=='setup'" >
-        <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('account')">账户管理</a>
+        <a href="#" class="firstButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('building')">楼栋管理</a>
 
         <br v-if="this.$store.state.parentMenuCode=='setup'" >
-        <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('customer')">用户管理</a>
+        <a href="#" class="secondButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('section')">区域管理</a>
 
         <br v-if="this.$store.state.parentMenuCode=='setup'" >
-        <a href="#" class="thirdButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('building')">楼栋管理</a>
+        <a href="#" class="thirdButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('account')">账户管理</a>
 
         <br v-if="this.$store.state.parentMenuCode=='setup'" >
-        <a href="#" class="forthButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('section')">区域管理</a>
+        <a href="#" class="forthButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('customer')">用户管理</a>
 
         <br v-if="this.$store.state.parentMenuCode=='setup'" >
         <a href="#" class="fifthButtonInLeftSide" v-if="this.$store.state.parentMenuCode=='setup'" v-on:click="goToFromLeftSide('password')">修改密码</a>
@@ -126,6 +128,20 @@ export default {
                 this.$store.commit('updateSubAction',subAction)
 
                 this.$router.push("/bindDevice");
+            }
+
+            if (action == 'price') {
+                let menus = {
+                    parentMenu: '设备管理',
+                    childMenu: '电价设置',
+                    parentMenuCode: 'device'
+                }
+                this.$store.commit('updateMenu',menus)
+
+                let subAction = {subAction: 'price'}
+                this.$store.commit('updateSubAction',subAction)
+
+                this.$router.push("/price");
             }
 
             if (action == 'currentUsage') {

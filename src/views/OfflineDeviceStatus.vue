@@ -41,7 +41,7 @@
                     <tr>
                         <td align="right" width="80px">每页显示数</td>
                         <td align="left" width="300px">
-                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect">
+                            <select v-model="searchForm.pageSize" placeholder="请选择" class="searchSelect" @change="handleOnPageSizeChange">
                                 <option :value="item.value" v-for="item in pageSizeOptions" v-bind:key="item">
                                     {{item.label}}
                                 </option>
@@ -61,34 +61,40 @@
                     <tr>
                         <th width="50px" align="center">序列号</th>
                         <th width="100px">设备名称</th>
+                        <th width="200px">用户</th>
                         <th width="100px">楼栋</th>
                         <th width="100px">区域</th>
                         <th width="50px" align="center">运行状态</th>
                         <th width="50px" align="center">拉闸状态</th>
-                        <th width="100px" align="center">当前电压</th>
-                        <th width="100px" align="center">当前电流</th>
-                        <th width="100px" align="center">当前电量</th>
+                        <th width="50px" align="center">当前电压</th>
+                        <th width="50px" align="center">当前电流</th>
+                        <th width="50px" align="center">当前电量</th>
+                        <th width="50px" align="center">当月电费</th>
                         <th width="100px" align="center">更新时间</th>
                         <th width="100px" align="center">操作</th>
                     </tr>
                     <tr v-for="item in allDeviceStatusList" v-bind:key="item">
-                        <td align="center">{{item.sid}}</td>
-                        <td>{{item.name}}</td>
-                        <td>{{item.buildingName}}</td>
-                        <td>{{item.sectionName}}</td>
-                        <td v-if="item.online==0" bgcolor="#FF0000" align="center">{{item.onlineStr}}</td>
-                        <td v-if="item.online==1" bgcolor="#00FF00" align="center">{{item.onlineStr}}</td>
-                        <td width="50px" align="center">{{getSwitchOutStatus(item.switchOutStatus)}}</td>
+                        <td align="center" width="50px">{{item.sid}}</td>
+                        <td width="100px">{{item.name}}</td>
+                        <td width="200px">{{ getCustomerName(item.customerId) }}</td>
+                        <td width="100px">{{item.buildingName}}</td>
+                        <td width="100px">{{item.sectionName}}</td>
+                        <td width="50px" v-if="item.online==0" bgcolor="#FF0000" align="center">{{item.onlineStr}}</td>
+                        <td width="50px" v-if="item.online==1" bgcolor="#00FF00" align="center">{{item.onlineStr}}</td>
+                        <td width="50px" align="center">{{getSwitchStatus(item.switchStatus)}}</td>
                         <td align="center">{{item.voltage}}</td>
                         <td align="center">{{item.electric}}</td>
                         <td align="center">{{item.electConsumption}}</td>
+                        <td align="center">{{item.currentMonthCharge}}</td>
                         <td align="center">{{formatDateFromLong(item.receiveTimeNumber)}}</td>
                         <td align="center">
-                            <a href="#" v-on:click="openHistoryData(item.iotDeviceId)">历史上报数据</a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" v-on:click="switchout(item.id)">拉闸</a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;
-                            <a href="#" v-on:click="switchon(item.id)">合闸</a>
+                            <select name="moreActionSelect" v-model="moreAction" class="actionSelect" placeholder="更多操作"  @change="handleOnActionChange(item)">
+                                <option value="0" >更多操作</option>
+                                <option value="history" >历史上报数据</option>
+                                <option value="price" >电价设置</option>
+                                <option value="switchout" >拉闸</option>
+                                <option value="switchon" >合闸</option>
+                            </select>
                         </td>
                     </tr>
 
@@ -222,6 +228,7 @@ export default {
             historyDataList: [],
             selectedIotDeviceIdForHistory: '',
             allCustomers: [],
+            moreAction: 0,
 
             pickerOptions: {
                 shortcuts: [{
@@ -456,6 +463,7 @@ export default {
                     type:"success",
                     message:"指令下发成功"
                 })
+                this.find()
             }else {
                 hideBgMsg()
                 activeBg()
@@ -483,6 +491,7 @@ export default {
                     type:"success",
                     message:"指令下发成功"
                 })
+                this.find()
             }else {
                 hideBgMsg()
                 activeBg()
@@ -494,12 +503,41 @@ export default {
             }
         },
 
-        getSwitchOutStatus(switchOutStatusValue) {
-            if (switchOutStatusValue == "1") {
+        getSwitchStatus(switchStatusValue) {
+            if (switchStatusValue == "0") {
                 return "合闸"
             }else {
                 return "拉闸"
             }
+        },
+
+        getCustomerName(customerId) {
+            if (customerId == '-1') {
+                return '合计'
+            }
+            for (let i = 0; i < this.allCustomers.length; i++) {
+                if(this.allCustomers[i].id == customerId) {
+                    return this.allCustomers[i].name
+                }
+            }
+        },
+
+        handleOnPageSizeChange(){
+            this.currentPage = 1
+            this.find()
+        },
+
+        handleOnActionChange(item){
+            if (this.moreAction == 'history') {
+                this.openHistoryData(item.iotDeviceId)
+            }
+            if (this.moreAction == 'switchout') {
+                this.switchout(item.id)
+            }
+            if (this.moreAction == 'switchon') {
+                this.switchon(item.id)
+            }
+            this.moreAction = 0
         }
     }
 }

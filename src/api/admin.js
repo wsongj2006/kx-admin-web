@@ -682,8 +682,71 @@ export function switchOn(params) {
     )
 }
 
+
+export function getPrice(params) {
+    let url = getHost() + '/price?customerId='+params.customerId+'&pageNum='+params.pageNum+'&counts='+params.counts
+    return axios.get(
+        url,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function savePrice(params) {
+    let url = getHost() + '/price'
+    return axios.post(
+        url,
+        params,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function updatePrice(params) {
+    let url = getHost() + '/price/' + params.id
+    return axios.put(
+        url,
+        params,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
+export function deletePrice(params) {
+  let url = getHost() + '/price/' + params.id
+  return axios.delete(
+             url,
+             {
+               headers: {
+                  'token': localStorage.getItem("token")
+               }
+             }
+    )
+}
+
+export function getCustomerDevice(params) {
+    let url = getHost() + '/customer/' + params.customerId + '/device'
+    return axios.get(
+        url,
+        {
+            headers: {
+                'token': localStorage.getItem("token")
+            }
+        }
+    )
+}
+
 function getHost() {
-  let localhostUrl = 'http://192.168.1.6:9290'
+  let localhostUrl = 'http://192.168.1.8:9290'
   let aliyunUrl = 'http://47.110.82.181:9290'
   return aliyunUrl
 }
